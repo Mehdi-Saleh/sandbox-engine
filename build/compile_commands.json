@@ -4,5 +4,17 @@
   "command": "/usr/bin/g++ -g -std=gnu++17 -o CMakeFiles/SandboxEngine.dir/main.cpp.o -c \"/home/mehdi/My Projects/sandbox-engine/main.cpp\"",
   "file": "/home/mehdi/My Projects/sandbox-engine/main.cpp",
   "output": "CMakeFiles/SandboxEngine.dir/main.cpp.o"
+},
+{
+  "directory": "/home/mehdi/My Projects/sandbox-engine/build",
+  "command": "/usr/bin/g++ -g -std=gnu++17 -o CMakeFiles/SandboxEngine.dir/renderer.cpp.o -c \"/home/mehdi/My Projects/sandbox-engine/renderer.cpp\"",
+  "file": "/home/mehdi/My Projects/sandbox-engine/renderer.cpp",
+  "output": "CMakeFiles/SandboxEngine.dir/renderer.cpp.o"
+},
+{
+  "directory": "/home/mehdi/My Projects/sandbox-engine/build",
+  "command": "/usr/bin/g++ -g -std=gnu++17 -o CMakeFiles/SandboxEngine.dir/particles_manager.cpp.o -c \"/home/mehdi/My Projects/sandbox-engine/particles_manager.cpp\"",
+  "file": "/home/mehdi/My Projects/sandbox-engine/particles_manager.cpp",
+  "output": "CMakeFiles/SandboxEngine.dir/particles_manager.cpp.o"
 }
 ]

@@ -21,11 +21,13 @@ class Renderer
     private: SDL_FRect particleRect { 0, 0, 10, 10 };
 
 
-    public: Renderer( string windowName, int width, int height )
+    public: Renderer( string windowName, int width, int height, float partileSize, int** board )
     {
         this->windowName = windowName;
         windowWidth = width;
         windowHeight = height;
+        this->particleSize = partileSize;
+        this->board = board;
     }
 
 
@@ -42,7 +44,7 @@ class Renderer
     public: int Init()
     {
         int exitCode = 0;
-        CreateBoard();
+        InitBoard();
         exitCode = InitSDL();
         return exitCode;
     }
@@ -71,12 +73,17 @@ class Renderer
     }
 
 
-    private: void CreateBoard()
+    private: void InitBoard()
     {
         boardWidth = windowWidth / particleSize;
         boardHeight = windowHeight / particleSize;
         particleRect.h = particleRect.w = particleSize;
+    }
 
+
+    private: void CreateBoard()
+    {
+        InitBoard();
         board = new int*[boardWidth];
         for ( int i = 0; i < boardWidth; i++ )
         {
@@ -99,7 +106,7 @@ class Renderer
 
     private: void DestroyBoard()
     {
-        for ( int i = 0; i < windowWidth; i++ )
+        for ( int i = 0; i < boardWidth; i++ )
         {
             delete [] board[i];
         }
@@ -137,4 +144,8 @@ class Renderer
         point.y = boardY * particleSize;
         return point;
     }
+
+
+    // TODO
+    // public: void UpdateBoard( particles ) {}
 };
