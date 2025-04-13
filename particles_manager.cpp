@@ -63,7 +63,7 @@ class ParticlesManager
     {
         if ( x >= boardWidth || y >= boardHeight )
         {
-            std::cerr << "Out of bounds error: Tried to add particle at (" << x << ", " << y << ")!";
+            std::cerr << "Out of bounds error: Tried to add particle at (" << x << ", " << y << ")!\n";
             return;
         }
 
@@ -76,7 +76,7 @@ class ParticlesManager
     {
         if ( x >= boardWidth || y >= boardHeight )
         {
-            std::cerr << "Out of bounds error: Tried to swap particle at (" << x << ", " << y << ")!";
+            std::cerr << "Out of bounds error: Tried to swap particle at (" << x << ", " << y << ")!\n";
             return;
         }
 
@@ -88,7 +88,7 @@ class ParticlesManager
     {
         if ( x >= boardWidth || y >= boardHeight )
         {
-            std::cerr << "Out of bounds error: Tried to erase particle at (" << x << ", " << y << ")!";
+            std::cerr << "Out of bounds error: Tried to erase particle at (" << x << ", " << y << ")!\n";
             return;
         }
 
