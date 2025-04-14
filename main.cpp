@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
     ParticlesManager particlesManager = ParticlesManager( WINDOW_WIDTH/PARTICLE_SIZE, WINDOW_HEGHT/PARTICLE_SIZE );
     Renderer renderer = Renderer( string( WINDOW_NAME ), WINDOW_WIDTH, WINDOW_HEGHT, PARTICLE_SIZE, particlesManager.GetBoard() );
     InputHandler inputHandler = InputHandler();
-    // inputHandler.particlesManager = particlesManager;
+
     int init_exit_code = renderer.Init();
     if ( init_exit_code != 0 )
     {
@@ -30,37 +30,20 @@ int main(int argc, char* argv[])
     bool erase = false;
     while ( running ) 
     {
-        while (SDL_PollEvent(&event)) 
+        inputHandler.HandleInput();
+        if ( inputHandler.GetIsQuiting() )
+            running = false;
+        else if ( inputHandler.GetIsAddingParticle() )
         {
-            if (event.type == SDL_EVENT_QUIT) 
-            {
-                running = false;
-            }
-            else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) 
-            {
-                if ( event.button.button == SDL_BUTTON_LEFT )
-                    add = true;
-                else if ( event.button.button == SDL_BUTTON_RIGHT )
-                    erase = true;
-            }
-            else if (event.type == SDL_EVENT_MOUSE_BUTTON_UP) 
-            {
-                if ( event.button.button == SDL_BUTTON_LEFT )
-                    add = false;
-                else if ( event.button.button == SDL_BUTTON_RIGHT )
-                    erase= false;
-            }
+            SDL_FPoint mousePos = inputHandler.GetMousePos();
+            mousePos = renderer.GetScreenToBoardSpace( mousePos.x, mousePos.y );
+            particlesManager.AddParticleOfSelected( mousePos.x, mousePos.y );
         }
-        if ( add || erase )
+        else if ( inputHandler.GetIsErasingParticle() )
         {
-                float x,y;
-                SDL_GetMouseState( &x, &y );
-                x /= PARTICLE_SIZE;
-                y /= PARTICLE_SIZE;
-                if ( add )
-                    particlesManager.AddParticle( 1, x, y );
-                else 
-                    particlesManager.EraseParticle( x, y );
+            SDL_FPoint mousePos = inputHandler.GetMousePos();
+            mousePos = renderer.GetScreenToBoardSpace( mousePos.x, mousePos.y );
+            particlesManager.EraseParticle( mousePos.x, mousePos.y );
         }
 
         renderer.RenderBoard();

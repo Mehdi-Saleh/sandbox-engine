@@ -6,6 +6,8 @@ class ParticlesManager
     private: int boardWidth = 10;
     private: int boardHeight = 10;
 
+    private: int selectedElement = 1;
+
 
     public: ParticlesManager( int boardWidth, int boardHeight )
     {
@@ -32,14 +34,6 @@ class ParticlesManager
                 board[i][j] = -1;
             }
         }
-
-        // TEMP
-        board[0][0] = 1;
-        board[1][1] = 1;
-        board[2][2] = 1;
-        board[3][3] = 1;
-        board[5][5] = 1;
-        
     }
 
 
@@ -56,6 +50,12 @@ class ParticlesManager
     public: int** GetBoard()
     {
         return board;
+    }
+
+
+    public: void AddParticleOfSelected( int x, int y )
+    {
+        AddParticle( selectedElement, x, y );
     }
 
 

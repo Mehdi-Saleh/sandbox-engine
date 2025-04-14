@@ -126,7 +126,7 @@ class Renderer
                 if ( board[i][j] == -1 )
                     continue;
                 
-                SDL_FPoint screenPoint = GetBoardToScreenPoint( i, j );
+                SDL_FPoint screenPoint = GetBoardToScreenSpace( i, j );
                 particleRect.x = screenPoint.x;
                 particleRect.y = screenPoint.y;
                 SDL_SetRenderDrawColor( sdlRenderer, 0, 255, 0, 255 );
@@ -137,11 +137,20 @@ class Renderer
     }
 
 
-    private: SDL_FPoint GetBoardToScreenPoint( int boardX, int boardY )
+    public: SDL_FPoint GetBoardToScreenSpace( int boardX, int boardY )
     {
         SDL_FPoint point = SDL_FPoint();
         point.x = boardX * particleSize;
         point.y = boardY * particleSize;
+        return point;
+    }
+
+
+    public: SDL_FPoint GetScreenToBoardSpace( int screenX, int screenY )
+    {
+        SDL_FPoint point = SDL_FPoint();
+        point.x = screenX / particleSize;
+        point.y = screenY / particleSize;
         return point;
     }
 
