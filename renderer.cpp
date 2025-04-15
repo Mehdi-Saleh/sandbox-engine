@@ -129,7 +129,7 @@ class Renderer
                 SDL_FPoint screenPoint = GetBoardToScreenSpace( i, j );
                 particleRect.x = screenPoint.x;
                 particleRect.y = screenPoint.y;
-                SDL_SetRenderDrawColor( sdlRenderer, 0, 255, 0, 255 );
+                SDL_SetRenderDrawColor( sdlRenderer, 252, 219, 3, 255 );
                 SDL_RenderFillRect( sdlRenderer, &particleRect );
             }
         

@@ -10,6 +10,8 @@
 #define WINDOW_HEGHT 480
 #define PARTICLE_SIZE 8.0
 
+#define UPDATE_INTERVAL_IN_MILLISECONDS 30
+
 
 int main(int argc, char* argv[]) 
 {
@@ -25,6 +27,7 @@ int main(int argc, char* argv[])
     }
 
     SDL_Event event;
+    Uint64 timePassedSinceUpdateInMilliseconds = 0;
     bool running = true;
     bool add = false;
     bool erase = false;
@@ -46,7 +49,14 @@ int main(int argc, char* argv[])
             particlesManager.EraseParticle( mousePos.x, mousePos.y );
         }
 
+        Uint64 newTimePassed = SDL_GetTicks();
+        if ( newTimePassed - timePassedSinceUpdateInMilliseconds > UPDATE_INTERVAL_IN_MILLISECONDS )
+        {
+            particlesManager.Update();
+            timePassedSinceUpdateInMilliseconds = newTimePassed;
+        }
         renderer.RenderBoard();
+        
     }
     
     return 0;

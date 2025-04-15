@@ -1,11 +1,10 @@
 # ninja log v6
-3	218	1744586113336887533	CMakeFiles/SandboxEngine.dir/main.cpp.o	15dcc22251783144
-218	280	1744586113552455545	SandboxEngine	b51f230c4aa8e19
-0	224	1744580704301651380	CMakeFiles/SandboxEngine.dir/renderer.cpp.o	45bdc651f31f3562
-2	174	1744584619342983374	CMakeFiles/SandboxEngine.dir/particles_manager.cpp.o	59e1ef73f6713cd8
-2	277	1744644682098733695	CMakeFiles/SandboxEngine.dir/renderer.cpp.o	45bdc651f31f3562
-2	278	1744644682098993418	CMakeFiles/SandboxEngine.dir/particles_manager.cpp.o	59e1ef73f6713cd8
-2	345	1744644682097421697	CMakeFiles/SandboxEngine.dir/main.cpp.o	15dcc22251783144
-345	439	1744644682440819500	SandboxEngine	b51f230c4aa8e19
-0	303	1744644734211119790	CMakeFiles/SandboxEngine.dir/main.cpp.o	15dcc22251783144
-303	348	1744644734514285379	SandboxEngine	b51f230c4aa8e19
+4	638	1744726338539370832	CMakeFiles/SandboxEngine.dir/main.cpp.o	15dcc22251783144
+638	720	1744726339173353596	SandboxEngine	b51f230c4aa8e19
+4	426	1744725496319465970	CMakeFiles/SandboxEngine.dir/renderer.cpp.o	45bdc651f31f3562
+4	357	1744725405275177975	CMakeFiles/SandboxEngine.dir/particles_manager.cpp.o	59e1ef73f6713cd8
+3	30	1744726537955949183	CMakeFiles/SandboxEngine.dir/particle_mover.cpp.o	d4b3de3280b16ef1
+30	187	1744726537982948449	SandboxEngine	81d1c6f69bec21c6
+4	415	1744726700590527531	CMakeFiles/SandboxEngine.dir/particles_manager.cpp.o	59e1ef73f6713cd8
+3	620	1744726700589527558	CMakeFiles/SandboxEngine.dir/main.cpp.o	15dcc22251783144
+620	747	1744726701206681860	SandboxEngine	81d1c6f69bec21c6

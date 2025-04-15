@@ -1,10 +1,13 @@
 #include <iostream>
+#include </home/mehdi/My Projects/sandbox-engine/particle_mover.cpp>
 
 class ParticlesManager
 {
     private: int** board = nullptr;
     private: int boardWidth = 10;
     private: int boardHeight = 10;
+
+    ParticleMover particleMover;
 
     private: int selectedElement = 1;
 
@@ -14,6 +17,7 @@ class ParticlesManager
         this->boardWidth = boardWidth;
         this->boardHeight = boardHeight;
         CreateBoard();
+        particleMover = ParticleMover( board, boardWidth, boardHeight );
     }
 
 
@@ -44,6 +48,17 @@ class ParticlesManager
             delete [] board[i];
         }
         delete [] board;
+    }
+
+
+    public: void Update()
+    {
+        for ( int j = boardHeight - 1; j >= 0; j-- )
+            for ( int i = 0; i < boardWidth; i++ )
+            {
+                if ( board[i][j] == 1 )
+                    particleMover.ApplySandMovement( i, j );
+            }
     }
 
 

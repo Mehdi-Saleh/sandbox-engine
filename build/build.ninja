@@ -67,6 +67,12 @@ build CMakeFiles/SandboxEngine.dir/particles_manager.cpp.o: CXX_COMPILER__Sandbo
   OBJECT_DIR = CMakeFiles/SandboxEngine.dir
   OBJECT_FILE_DIR = CMakeFiles/SandboxEngine.dir
 
+build CMakeFiles/SandboxEngine.dir/particle_mover.cpp.o: CXX_COMPILER__SandboxEngine_unscanned_Debug /home/mehdi/My$ Projects/sandbox-engine/particle_mover.cpp || cmake_object_order_depends_target_SandboxEngine
+  DEP_FILE = CMakeFiles/SandboxEngine.dir/particle_mover.cpp.o.d
+  FLAGS = -g -std=gnu++17
+  OBJECT_DIR = CMakeFiles/SandboxEngine.dir
+  OBJECT_FILE_DIR = CMakeFiles/SandboxEngine.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target SandboxEngine
@@ -75,7 +81,7 @@ build CMakeFiles/SandboxEngine.dir/particles_manager.cpp.o: CXX_COMPILER__Sandbo
 #############################################
 # Link the executable SandboxEngine
 
-build SandboxEngine: CXX_EXECUTABLE_LINKER__SandboxEngine_Debug CMakeFiles/SandboxEngine.dir/main.cpp.o CMakeFiles/SandboxEngine.dir/renderer.cpp.o CMakeFiles/SandboxEngine.dir/particles_manager.cpp.o | /usr/local/lib64/libSDL3.so.0.3.0
+build SandboxEngine: CXX_EXECUTABLE_LINKER__SandboxEngine_Debug CMakeFiles/SandboxEngine.dir/main.cpp.o CMakeFiles/SandboxEngine.dir/renderer.cpp.o CMakeFiles/SandboxEngine.dir/particles_manager.cpp.o CMakeFiles/SandboxEngine.dir/particle_mover.cpp.o | /usr/local/lib64/libSDL3.so.0.3.0
   FLAGS = -g
   LINK_LIBRARIES = -Wl,-rpath,/usr/local/lib64  /usr/local/lib64/libSDL3.so.0.3.0
   OBJECT_DIR = CMakeFiles/SandboxEngine.dir

@@ -16,5 +16,11 @@
   "command": "/usr/bin/g++ -g -std=gnu++17 -o CMakeFiles/SandboxEngine.dir/particles_manager.cpp.o -c \"/home/mehdi/My Projects/sandbox-engine/particles_manager.cpp\"",
   "file": "/home/mehdi/My Projects/sandbox-engine/particles_manager.cpp",
   "output": "CMakeFiles/SandboxEngine.dir/particles_manager.cpp.o"
+},
+{
+  "directory": "/home/mehdi/My Projects/sandbox-engine/build",
+  "command": "/usr/bin/g++ -g -std=gnu++17 -o CMakeFiles/SandboxEngine.dir/particle_mover.cpp.o -c \"/home/mehdi/My Projects/sandbox-engine/particle_mover.cpp\"",
+  "file": "/home/mehdi/My Projects/sandbox-engine/particle_mover.cpp",
+  "output": "CMakeFiles/SandboxEngine.dir/particle_mover.cpp.o"
 }
 ]
