@@ -1,3 +1,6 @@
+#ifndef PARTICLES_MANAGER
+#define PARTICLES_MANAGER
+
 #include <iostream>
 #include </home/mehdi/My Projects/sandbox-engine/particle_mover.cpp>
 
@@ -8,8 +11,6 @@ class ParticlesManager
     private: int boardHeight = 10;
 
     ParticleMover particleMover;
-
-    private: int selectedElement = 1;
 
 
     public: ParticlesManager( int boardWidth, int boardHeight )
@@ -68,19 +69,10 @@ class ParticlesManager
     }
 
 
-    public: void AddParticleOfSelected( int x, int y )
-    {
-        AddParticle( selectedElement, x, y );
-    }
-
-
     public: void AddParticle( int element, int x, int y )
     {
         if ( x >= boardWidth || y >= boardHeight )
-        {
-            std::cerr << "Out of bounds error: Tried to add particle at (" << x << ", " << y << ")!\n";
             return;
-        }
 
         if ( board[x][y] == -1 )
             board[x][y] = element;
@@ -90,10 +82,7 @@ class ParticlesManager
     public: void SwapParticle( int element, int x, int y )
     {
         if ( x >= boardWidth || y >= boardHeight )
-        {
-            std::cerr << "Out of bounds error: Tried to swap particle at (" << x << ", " << y << ")!\n";
             return;
-        }
 
         board[x][y] = element;
     }
@@ -102,12 +91,10 @@ class ParticlesManager
     public: void EraseParticle( int x, int y )
     {
         if ( x >= boardWidth || y >= boardHeight )
-        {
-            std::cerr << "Out of bounds error: Tried to erase particle at (" << x << ", " << y << ")!\n";
             return;
-        }
 
         board[x][y] = -1;
     }
 };
 
+#endif

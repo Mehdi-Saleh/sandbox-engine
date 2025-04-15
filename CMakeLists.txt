@@ -11,7 +11,9 @@ add_executable(
 		main.cpp 
 		renderer.cpp 
 		particles_manager.cpp
+		particles_manager.h
 		particle_mover.cpp
+		particle_mover.h
 		)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3)

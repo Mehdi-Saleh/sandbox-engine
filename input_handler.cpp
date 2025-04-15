@@ -1,7 +1,6 @@
 #include <SDL3/SDL.h>
 #include <iostream>
 #include <functional>
-// #include </home/mehdi/My Projects/sandbox-engine/particles_manager.cpp>
 
 
 class InputHandler

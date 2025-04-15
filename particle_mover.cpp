@@ -1,3 +1,6 @@
+#ifndef PARTICLE_MOVER
+#define PARTICLE_MOVER
+
 class ParticleMover
 {
     private: int** board = nullptr;
@@ -183,3 +186,5 @@ class ParticleMover
         );
     }
 };
+
+#endif
