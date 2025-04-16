@@ -17,16 +17,34 @@ class DrawingUtility
 
     public: void AddParticles( int x, int y )
     {
-        for ( int i = x - brushSize; i <= x + brushSize; i++ )
-            for ( int j = y - brushSize; j <= y + brushSize; j++ )
-                particlesManager->AddParticle( selectedElement, i, j );
+        for ( int i = -brushSize; i <= brushSize; i++ )
+            for ( int j = -brushSize; j <= brushSize; j++ )
+            {
+                if ( !GetIsInCircle( i, j, brushSize ) )
+                    continue;
+                int newX = x + i;
+                int newY = y + j;
+                particlesManager->AddParticle( selectedElement, newX, newY );
+            }
     }
 
 
     public: void EraseParticles( int x, int y )
     {
-        for ( int i = x - brushSize; i <= x + brushSize; i++ )
-            for ( int j = y - brushSize; j <= y + brushSize; j++ )
-                particlesManager->EraseParticle( i, j );
+        for ( int i = -brushSize; i <= brushSize; i++ )
+            for ( int j = -brushSize; j <= brushSize; j++ )
+            {
+                if ( !GetIsInCircle( i, j, brushSize ) )
+                    continue;
+                int newX = x + i;
+                int newY = y + j;
+                particlesManager->EraseParticle( newX, newY );
+            }
+    }
+
+
+    private: inline bool GetIsInCircle( int x, int y, int r )
+    {
+        return x*x + y*y <= r*r;
     }
 };
