@@ -1,3 +1,6 @@
+#ifndef DRAWING_UTILITY
+#define DRAWING_UTILITY
+
 #include "particles_manager.cpp"
 
 
@@ -5,13 +8,37 @@ class DrawingUtility
 {
     private: ParticlesManager* particlesManager;
 
-    public: int brushSize = 1;
+    public: int brushSize = 3;
     private: int selectedElement = 1;
     
     
     public: DrawingUtility( ParticlesManager* particlesManager )
     {
         this->particlesManager = particlesManager;
+    }
+
+
+    public: void SelectElement( int element )
+    {
+        selectedElement = element;
+    }
+
+
+    public: void SetBrushSize( int size )
+    {
+        brushSize = size;
+    }
+
+
+    public: void IncreaseBrushSize( int sizeIncrease )
+    {
+        brushSize += sizeIncrease;
+    }
+
+
+    public: void DecreaseBrushSize( int sizeDecrease )
+    {
+        brushSize -= sizeDecrease;
     }
 
 
@@ -48,3 +75,5 @@ class DrawingUtility
         return x*x + y*y <= r*r;
     }
 };
+
+#endif

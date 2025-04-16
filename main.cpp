@@ -50,6 +50,18 @@ int main(int argc, char* argv[])
             mousePos = renderer.GetScreenToBoardSpace( mousePos.x, mousePos.y );
             drawingUtility.EraseParticles( mousePos.x, mousePos.y );
         }
+        else if ( inputHandler.GetIsIncreasingBrushSize() )
+        {
+            drawingUtility.IncreaseBrushSize( 1 );
+        }
+        else if ( inputHandler.GetIsDecreasingBrushSize() )
+        {
+            drawingUtility.DecreaseBrushSize( 1 );
+        }
+        else if ( inputHandler.GetIsSelectingElement() != -1 )
+        {
+            drawingUtility.SelectElement( inputHandler.GetIsSelectingElement() );
+        }
 
         Uint64 newTimePassed = SDL_GetTicks();
         if ( newTimePassed - timePassedSinceUpdateInMilliseconds > UPDATE_INTERVAL_IN_MILLISECONDS )

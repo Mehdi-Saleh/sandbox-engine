@@ -1,3 +1,6 @@
+#ifndef RENDERER
+#define RENDERER
+
 #include <SDL3/SDL.h>
 #include <iostream>
 #include <string>
@@ -20,6 +23,9 @@ class Renderer
     private: float particleSize = 8;
     private: SDL_FRect particleRect { 0, 0, 10, 10 };
 
+    private: SDL_Color* particleColors = nullptr;
+    private: int particleColorsCount;
+
 
     public: Renderer( string windowName, int width, int height, float partileSize, int** board )
     {
@@ -33,7 +39,7 @@ class Renderer
 
     ~Renderer()
     {
-        DestroyBoard();
+        delete [] particleColors;
 
         SDL_DestroyRenderer( sdlRenderer );
         SDL_DestroyWindow( window );
@@ -45,6 +51,7 @@ class Renderer
     {
         int exitCode = 0;
         InitBoard();
+        InitParticleColors();
         exitCode = InitSDL();
         return exitCode;
     }
@@ -81,36 +88,27 @@ class Renderer
     }
 
 
-    private: void CreateBoard()
+    private: void InitParticleColors()
     {
-        InitBoard();
-        board = new int*[boardWidth];
-        for ( int i = 0; i < boardWidth; i++ )
-        {
-            board[i] = new int[boardHeight];
-            for ( int j = 0; j < boardHeight; j++ )
-            {
-                board[i][j] = -1;
-            }
-        }
+        // TODO needs to init from settings later
+        particleColors = new SDL_Color[10];
+        particleColorsCount = 10;
 
-        // TEMP
-        board[0][0] = 1;
-        board[1][1] = 1;
-        board[2][2] = 1;
-        board[3][3] = 1;
-        board[5][5] = 1;
+        particleColors[0].r = 0;
+        particleColors[0].g = 0;
+        particleColors[0].b = 0;
+        particleColors[0].a = 255;
         
-    }
-
-
-    private: void DestroyBoard()
-    {
-        for ( int i = 0; i < boardWidth; i++ )
-        {
-            delete [] board[i];
-        }
-        delete [] board;
+        particleColors[1].r = 252;
+        particleColors[1].g = 219;
+        particleColors[1].b = 3;
+        particleColors[1].a = 255;
+        
+        particleColors[2].r = 6;
+        particleColors[2].g = 3;
+        particleColors[2].b = 219;
+        particleColors[2].a = 255;
+        
     }
 
 
@@ -129,7 +127,8 @@ class Renderer
                 SDL_FPoint screenPoint = GetBoardToScreenSpace( i, j );
                 particleRect.x = screenPoint.x;
                 particleRect.y = screenPoint.y;
-                SDL_SetRenderDrawColor( sdlRenderer, 252, 219, 3, 255 );
+                SDL_Color particleColor = particleColors[ board[i][j] ];
+                SDL_SetRenderDrawColor( sdlRenderer, particleColor.r, particleColor.g, particleColor.b, particleColor.a );
                 SDL_RenderFillRect( sdlRenderer, &particleRect );
             }
         
@@ -158,3 +157,5 @@ class Renderer
     // TODO
     // public: void UpdateBoard( particles ) {}
 };
+
+#endif

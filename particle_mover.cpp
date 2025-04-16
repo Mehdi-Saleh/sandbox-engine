@@ -4,6 +4,7 @@
 class ParticleMover
 {
     private: int** board = nullptr;
+    private: bool** alreadyMoved = nullptr;
     private: int boardWidth = 10;
     private: int boardHeight = 10;
 
@@ -11,15 +12,16 @@ class ParticleMover
     public: ParticleMover(){}
 
 
-    public: ParticleMover( int** board, int boardWidth, int boardHeight )
+    public: ParticleMover( int** board, bool** alreadyMoved, int boardWidth, int boardHeight )
     {
         this->board = board;
+        this->alreadyMoved = alreadyMoved;
         this->boardWidth = boardWidth;
         this->boardHeight = boardHeight;
     }
 
 
-    public: void ApplySandMovement( int x, int y )
+    public: void ApplyPowderMovement( int x, int y )
     {
         if ( GetIsDownEmpty( x, y ) ) // TODO should move through water as well
             SwapWithDown( x, y );
@@ -27,6 +29,21 @@ class ParticleMover
             SwapWithRightDown( x, y );
         else if ( GetIsLeftDownEmpty( x, y ) )
             SwapWithLeftDown( x, y );
+    }
+
+
+    public: void ApplyLiquidMovement( int x, int y )
+    {
+        if ( GetIsDownEmpty( x, y ) )
+            SwapWithDown( x, y );
+        else if ( GetIsRightDownEmpty( x, y ) )
+            SwapWithRightDown( x, y );
+        else if ( GetIsLeftDownEmpty( x, y ) )
+            SwapWithLeftDown( x, y );
+        else if ( GetIsRightEmpty( x, y ) )
+            SwapWithRight( x, y );
+        else if ( GetIsLeftEmpty( x, y ) )
+            SwapWithLeft( x, y );
     }
 
 
@@ -173,6 +190,8 @@ class ParticleMover
         int temp = board[xA][yA];
         board[xA][yA] = board[xB][yB];
         board[xB][yB] = temp;
+        alreadyMoved[xA][yA] = true;
+        alreadyMoved[xB][yB] = true;
     }
 
 
