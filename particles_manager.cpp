@@ -134,7 +134,7 @@ class ParticlesManager
 
     public: void SwapParticle( int element, int x, int y )
     {
-        if ( x >= boardWidth || y >= boardHeight )
+        if ( GetIsOutOfBounds( x, y ) )
             return;
 
         board[x][y] = element;
@@ -143,7 +143,7 @@ class ParticlesManager
 
     public: void EraseParticle( int x, int y )
     {
-        if ( x >= boardWidth || y >= boardHeight )
+        if ( GetIsOutOfBounds( x, y ) )
             return;
 
         board[x][y] = -1;

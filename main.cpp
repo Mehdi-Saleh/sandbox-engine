@@ -8,7 +8,7 @@
 
 
 #define WINDOW_NAME "Sandbox Engine"
-#define WINDOW_WIDTH 640
+#define WINDOW_WIDTH 720
 #define WINDOW_HEGHT 480
 #define PARTICLE_SIZE 5.0
 
