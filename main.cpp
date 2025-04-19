@@ -4,6 +4,7 @@
 #include "particles_manager.cpp"
 #include "input_handler.cpp"
 #include "drawing_utility.cpp"
+#include "elements_data.cpp"
 
 
 #define WINDOW_NAME "Sandbox Engine"
@@ -14,17 +15,19 @@
 #define UPDATE_INTERVAL_IN_MILLISECONDS 30
 
 
-int main(int argc, char* argv[]) 
+int main( int argc, char* argv[] )
 {
-    ParticlesManager particlesManager = ParticlesManager( WINDOW_WIDTH/PARTICLE_SIZE, WINDOW_HEGHT/PARTICLE_SIZE );
-    Renderer renderer = Renderer( string( WINDOW_NAME ), WINDOW_WIDTH, WINDOW_HEGHT, PARTICLE_SIZE, particlesManager.GetBoard() );
+    ElementsData elementsData = ElementsData();
+    elementsData.LoadDefaultElements();
+    ParticlesManager particlesManager = ParticlesManager( WINDOW_WIDTH/PARTICLE_SIZE, WINDOW_HEGHT/PARTICLE_SIZE, &elementsData );
+    Renderer renderer = Renderer( std::string( WINDOW_NAME ), WINDOW_WIDTH, WINDOW_HEGHT, PARTICLE_SIZE, particlesManager.GetBoard(), &elementsData );
     InputHandler inputHandler = InputHandler();
     DrawingUtility drawingUtility = DrawingUtility( &particlesManager );
 
     int init_exit_code = renderer.Init();
     if ( init_exit_code != 0 )
     {
-        cerr << "Failed to init renderer. exit code: " << init_exit_code << "\n";
+        std::cerr << "Failed to init renderer. exit code: " << init_exit_code << "\n";
         return 1;
     }
 

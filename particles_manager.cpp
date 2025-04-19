@@ -2,10 +2,12 @@
 #define PARTICLES_MANAGER
 
 #include <iostream>
-#include </home/mehdi/My Projects/sandbox-engine/particle_mover.cpp>
+#include "particle_mover.cpp"
+#include "elements_data.cpp"
 
 class ParticlesManager
 {
+    private: ElementsData* elementsData;
     private: int** board = nullptr;
     private: bool** alreadyMoved = nullptr;
     private: int boardWidth = 10;
@@ -14,10 +16,11 @@ class ParticlesManager
     ParticleMover particleMover;
 
 
-    public: ParticlesManager( int boardWidth, int boardHeight )
+    public: ParticlesManager( int boardWidth, int boardHeight, ElementsData* elementsData )
     {
         this->boardWidth = boardWidth;
         this->boardHeight = boardHeight;
+        this->elementsData = elementsData;
         CreateBoard();
         CreateAlreadyMoved();
         particleMover = ParticleMover( board, alreadyMoved, boardWidth, boardHeight );
@@ -93,12 +96,22 @@ class ParticlesManager
         for ( int j = boardHeight - 1; j >= 0; j-- )
             for ( int i = 0; i < boardWidth; i++ )
             {
-                if ( alreadyMoved[i][j] )
+                if ( alreadyMoved[i][j] || board[i][j] == -1 )
                     continue;
-                if ( board[i][j] == 1 )
+                ElementParticleData* particleData = elementsData->GetParticleData( board[i][j] );
+                if ( particleData->state == PARTICLE_STATE_POWDER )
                     particleMover.ApplyPowderMovement( i, j );
-                else if ( board[i][j] == 2 )
+                else if (  particleData->state == PARTICLE_STATE_LIQUID )
                     particleMover.ApplyLiquidMovement( i, j );
+                else if (  particleData->state == PARTICLE_STATE_GAS )
+                {
+                    particleMover.ApplyGasMovement( i, j );
+                }
+                else if (  particleData->state == PARTICLE_STATE_PLASMA )
+                {
+                    // TODO implement plasma movement
+                    particleMover.ApplyGasMovement( i, j );
+                }
             }
     }
 

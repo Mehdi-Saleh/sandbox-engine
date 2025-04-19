@@ -47,6 +47,21 @@ class ParticleMover
     }
 
 
+    public: void ApplyGasMovement( int x, int y )
+    {
+        if ( GetIsUpEmpty( x, y ) )
+            SwapWithUp( x, y );
+        else if ( GetIsRightUpEmpty( x, y ) )
+            SwapWithRightUp( x, y );
+        else if ( GetIsLeftUpEmpty( x, y ) )
+            SwapWithLeftUp( x, y );
+        else if ( GetIsRightEmpty( x, y ) )
+            SwapWithRight( x, y );
+        else if ( GetIsLeftEmpty( x, y ) )
+            SwapWithLeft( x, y );
+    }
+
+
     private: bool GetIsDownEmpty( int x, int y )
     {
         int newX = x;

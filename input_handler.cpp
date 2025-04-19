@@ -69,6 +69,8 @@ class InputHandler
                     isSelectingElement = 8;
                 else if ( event.key.key == SDLK_9 )
                     isSelectingElement = 9;
+                else if ( event.key.key == SDLK_0 )
+                    isSelectingElement = 0;
             }
         }
     }
