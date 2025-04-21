@@ -23,7 +23,7 @@ class ParticlesManager
         this->elementsData = elementsData;
         CreateBoard();
         CreateAlreadyMoved();
-        particleMover = ParticleMover( board, alreadyMoved, boardWidth, boardHeight );
+        particleMover = ParticleMover( board, alreadyMoved, boardWidth, boardHeight, elementsData );
     }
 
 
@@ -105,11 +105,6 @@ class ParticlesManager
                     particleMover.ApplyLiquidMovement( i, j );
                 else if (  particleData->state == PARTICLE_STATE_GAS )
                 {
-                    particleMover.ApplyGasMovement( i, j );
-                }
-                else if (  particleData->state == PARTICLE_STATE_PLASMA )
-                {
-                    // TODO implement plasma movement
                     particleMover.ApplyGasMovement( i, j );
                 }
             }

@@ -10,9 +10,9 @@
 #define WINDOW_NAME "Sandbox Engine"
 #define WINDOW_WIDTH 720
 #define WINDOW_HEGHT 480
-#define PARTICLE_SIZE 5.0
+#define PARTICLE_SIZE 3.0
+#define UPDATE_INTERVAL_IN_MILLISECONDS 20
 
-#define UPDATE_INTERVAL_IN_MILLISECONDS 30
 
 
 int main( int argc, char* argv[] )

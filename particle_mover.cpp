@@ -1,128 +1,196 @@
 #ifndef PARTICLE_MOVER
 #define PARTICLE_MOVER
 
+#include "elements_data.cpp"
+
 class ParticleMover
 {
     private: int** board = nullptr;
     private: bool** alreadyMoved = nullptr;
     private: int boardWidth = 10;
     private: int boardHeight = 10;
-
+    private: ElementsData* elementsData = nullptr;
 
     public: ParticleMover(){}
 
 
-    public: ParticleMover( int** board, bool** alreadyMoved, int boardWidth, int boardHeight )
+    public: ParticleMover( int** board, bool** alreadyMoved, int boardWidth, int boardHeight, ElementsData* elementsData )
     {
         this->board = board;
         this->alreadyMoved = alreadyMoved;
         this->boardWidth = boardWidth;
         this->boardHeight = boardHeight;
+        this->elementsData = elementsData;
     }
 
 
-    public: void ApplyPowderMovement( int x, int y )
+    public: bool ApplyPowderMovement( int x, int y )
     {
-        if ( GetIsDownEmpty( x, y ) ) // TODO should move through water as well
-            SwapWithDown( x, y );
-        else if ( GetIsRightDownEmpty( x, y ) )
-            SwapWithRightDown( x, y );
-        else if ( GetIsLeftDownEmpty( x, y ) )
-            SwapWithLeftDown( x, y );
+        int otherX, otherY;
+        GetDown( x, y, otherX, otherY );
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) ) // TODO should move through water as well
+        {
+            Swap( x, y, otherX, otherY );
+            return true;
+        }
+
+        GetDownRight( x, y, otherX, otherY );
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) )
+        {
+            Swap( x, y, otherX, otherY );
+            return true;
+        }
+
+        GetDownLeft( x, y, otherX, otherY );
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) )
+        {
+            Swap( x, y, otherX, otherY );
+            return true;
+        }
+        
+        return false;
     }
 
 
-    public: void ApplyLiquidMovement( int x, int y )
+    public: bool ApplyLiquidMovement( int x, int y )
     {
-        if ( GetIsDownEmpty( x, y ) )
-            SwapWithDown( x, y );
-        else if ( GetIsRightDownEmpty( x, y ) )
-            SwapWithRightDown( x, y );
-        else if ( GetIsLeftDownEmpty( x, y ) )
-            SwapWithLeftDown( x, y );
-        else if ( GetIsRightEmpty( x, y ) )
-            SwapWithRight( x, y );
-        else if ( GetIsLeftEmpty( x, y ) )
-            SwapWithLeft( x, y );
+        bool moved = ApplyPowderMovement( x, y );
+        if ( moved )
+            return true;
+
+        int otherX, otherY;
+        GetRight( x, y, otherX, otherY );
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) )
+        {
+            Swap( x, y, otherX, otherY );
+            return true;
+        }
+
+        GetLeft( x, y, otherX, otherY );
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) )
+        {
+            Swap( x, y, otherX, otherY );
+            return true;
+        }
+        
+        return false;
     }
 
 
-    public: void ApplyGasMovement( int x, int y )
+    public: bool ApplyGasMovement( int x, int y )
     {
-        if ( GetIsUpEmpty( x, y ) )
-            SwapWithUp( x, y );
-        else if ( GetIsRightUpEmpty( x, y ) )
-            SwapWithRightUp( x, y );
-        else if ( GetIsLeftUpEmpty( x, y ) )
-            SwapWithLeftUp( x, y );
-        else if ( GetIsRightEmpty( x, y ) )
-            SwapWithRight( x, y );
-        else if ( GetIsLeftEmpty( x, y ) )
-            SwapWithLeft( x, y );
+        int otherX, otherY;
+        GetUp( x, y, otherX, otherY );
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) )
+        {
+            Swap( x, y, otherX, otherY );
+            return true;
+        }
+
+        GetUpRight( x, y, otherX, otherY );
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) )
+        {
+            Swap( x, y, otherX, otherY );
+            return true;
+        }
+
+        GetUpLeft( x, y, otherX, otherY );
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) )
+        {
+            Swap( x, y, otherX, otherY );
+            return true;
+        }
+
+        GetRight( x, y, otherX, otherY );
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) )
+        {
+            Swap( x, y, otherX, otherY );
+            return true;
+        }
+
+        GetLeft( x, y, otherX, otherY );
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) )
+        {
+            Swap( x, y, otherX, otherY );
+            return true;
+        }
+        
+        return false;
     }
 
 
-    private: bool GetIsDownEmpty( int x, int y )
+    private: inline void GetUp( int x, int y, int &newX, int &newY )
     {
-        int newX = x;
-        int newY = y + 1;
-        return GetIsEmpty( newX, newY );
+        newX = x;
+        newY = y - 1;
     }
 
 
-    private: bool GetIsUpEmpty( int x, int y )
+    private: inline void GetDown( int x, int y, int &newX, int &newY )
     {
-        int newX = x;
-        int newY = y - 1;
-        return GetIsEmpty( newX, newY );
+        newX = x;
+        newY = y + 1;
     }
 
 
-    private: bool GetIsLeftEmpty( int x, int y )
+    private: inline void GetLeft( int x, int y, int &newX, int &newY )
     {
-        int newX = x - 1;
-        int newY = y;
-        return GetIsEmpty( newX, newY );
+        newX = x - 1;
+        newY = y;
     }
 
 
-    private: bool GetIsRightEmpty( int x, int y )
+    private: inline void GetRight( int x, int y, int &newX, int &newY )
     {
-        int newX = x + 1;
-        int newY = y;
-        return GetIsEmpty( newX, newY );
+        newX = x + 1;
+        newY = y;
     }
 
 
-    private: bool GetIsLeftDownEmpty( int x, int y )
+    private: inline void GetUpLeft( int x, int y, int &newX, int &newY )
     {
-        int newX = x - 1;
-        int newY = y + 1;
-        return GetIsEmpty( newX, newY );
+        newX = x - 1;
+        newY = y - 1;
     }
 
 
-    private: bool GetIsRightDownEmpty( int x, int y )
+    private: inline void GetUpRight( int x, int y, int &newX, int &newY )
     {
-        int newX = x + 1;
-        int newY = y + 1;
-        return GetIsEmpty( newX, newY );
+        newX = x + 1;
+        newY = y - 1;
     }
 
 
-    private: bool GetIsLeftUpEmpty( int x, int y )
+    private: inline void GetDownLeft( int x, int y, int &newX, int &newY )
     {
-        int newX = x - 1;
-        int newY = y - 1;
-        return GetIsEmpty( newX, newY );
+        newX = x - 1;
+        newY = y + 1;
     }
 
 
-    private: bool GetIsRightUpEmpty( int x, int y )
+    private: inline void GetDownRight( int x, int y, int &newX, int &newY )
     {
-        int newX = x + 1;
-        int newY = y - 1;
-        return GetIsEmpty( newX, newY );
+        newX = x + 1;
+        newY = y + 1;
+    }
+
+
+    private: inline bool GetCanAPassThroughB( int aX, int aY, int bX, int bY )
+    {
+        if ( !( GetIsInBoardBounds( aX, aY ) && GetIsInBoardBounds( bX, bY ) ) )
+            return false;
+
+
+        if ( GetIsEmpty( bX, bY ) )
+            return true;
+        else{
+                int aState = GetParticleState( aX, aY );
+                int bState = GetParticleState( bX, bY );
+                return (
+                        GetCanStateAPassThrougStateB( aState, bState )
+                        && GetIsADenserThanB( aX, aY, bX, bY )
+                );
+            }
     }
 
 
@@ -132,6 +200,70 @@ class ParticleMover
             return false;
         else
             return board[x][y] == -1;
+    }
+
+
+    private: bool GetIsSolid( int x, int y )
+    {
+        if ( !GetIsInBoardBounds( x, y ) )
+            return true;
+        else
+            return GetParticleState( x, y ) == PARTICLE_STATE_SOLID;
+    }
+
+
+    private: bool GetIsPowder( int x, int y )
+    {
+        if ( !GetIsInBoardBounds( x, y ) )
+            return false;
+        else
+            return GetParticleState( x, y ) == PARTICLE_STATE_POWDER;
+    }
+
+
+    private: bool GetIsLiquid( int x, int y )
+    {
+        if ( !GetIsInBoardBounds( x, y ) )
+            return false;
+        else
+            return GetParticleState( x, y ) == PARTICLE_STATE_LIQUID;
+    }
+
+
+    private: bool GetIsGas( int x, int y )
+    {
+        if ( !GetIsInBoardBounds( x, y ) )
+            return false;
+        else
+            return GetParticleState( x, y ) == PARTICLE_STATE_GAS;
+    }
+
+
+    private: bool GetIsADenserThanB( int aX, int aY, int bX, int bY )
+    {
+        if ( !( GetIsInBoardBounds( aX, aY ) && GetIsInBoardBounds( bX, bY ) ) )
+            return true;
+        else
+            return GetParticleDensity( aX, aY ) > GetParticleDensity( bX, bY );
+    }
+
+
+    private: inline bool GetCanStateAPassThrougStateB( int aState, int bState )
+    {
+        return aState < bState || ( aState == bState && aState != PARTICLE_STATE_POWDER );
+        // return aState != PARTICLE_STATE_SOLID && bState != PARTICLE_STATE_SOLID && !( aState == bState && aState == PARTICLE_STATE_POWDER );
+    }
+
+
+    private: inline int GetParticleState( int x, int y )
+    {
+        return elementsData->GetParticleData( board[x][y] )->state;
+    }
+
+
+    private: inline int GetParticleDensity( int x, int y )
+    {
+        return elementsData->GetParticleData( board[x][y] )->density;
     }
 
 
@@ -167,7 +299,7 @@ class ParticleMover
     }
 
 
-    private: void SwapWithLeftDown( int x, int y )
+    private: void SwapWithDownLeft( int x, int y )
     {
         int newX = x - 1;
         int newY = y + 1;
@@ -175,7 +307,7 @@ class ParticleMover
     }
 
 
-    private: void SwapWithRightDown( int x, int y )
+    private: void SwapWithDownRight( int x, int y )
     {
         int newX = x + 1;
         int newY = y + 1;
@@ -184,7 +316,7 @@ class ParticleMover
 
 
 
-    private: void SwapWithLeftUp( int x, int y )
+    private: void SwapWithUpLeft( int x, int y )
     {
         int newX = x - 1;
         int newY = y - 1;
@@ -192,7 +324,7 @@ class ParticleMover
     }
 
 
-    private: void SwapWithRightUp( int x, int y )
+    private: void SwapWithUpRight( int x, int y )
     {
         int newX = x + 1;
         int newY = y - 1;

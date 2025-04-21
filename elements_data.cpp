@@ -10,7 +10,6 @@
 #define PARTICLE_STATE_POWDER 1
 #define PARTICLE_STATE_LIQUID 2
 #define PARTICLE_STATE_GAS 3
-#define PARTICLE_STATE_PLASMA 4
 
 
 struct ElementParticleData
@@ -103,6 +102,17 @@ class ElementsData
         color.b = 110;
         color.a = 255;
         elementsRenderingData[3].color = color;
+
+        // Element 4
+        elementsParticleData[4].state = PARTICLE_STATE_LIQUID;
+        elementsParticleData[4].density = 0.8;
+        elementsRenderingData[4].name = "Oil";
+        color = SDL_Color();
+        color.r = 171;
+        color.g = 131;
+        color.b = 10;
+        color.a = 255;
+        elementsRenderingData[4].color = color;
     }
 
 
