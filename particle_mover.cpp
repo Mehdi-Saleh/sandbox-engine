@@ -31,7 +31,7 @@ class ParticleMover
     {
         int otherX, otherY;
         GetDown( x, y, otherX, otherY );
-        if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !GetHasAlreadyMoved( otherX, otherY ) ) // TODO should move through water as well
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !GetHasAlreadyMoved( otherX, otherY ) )
         {
             Swap( x, y, otherX, otherY );
             lastParticleDirs[x][y] = PARTICLE_DIR_UP;
@@ -164,32 +164,32 @@ class ParticleMover
     {
         int otherX, otherY;
         GetUp( x, y, otherX, otherY );
-        if ( GetCanAPassThroughB( x, y, otherX, otherY, false ) && !GetHasAlreadyMoved( otherX, otherY ) )
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !GetHasAlreadyMoved( otherX, otherY ) )
         {
             Swap( x, y, otherX, otherY );
-            lastParticleDirs[x][y] = PARTICLE_DIR_DOWN;
-            lastParticleDirs[otherX][otherY] = PARTICLE_DIR_UP;
+            lastParticleDirs[x][y] = PARTICLE_DIR_UP;
+            lastParticleDirs[otherX][otherY] = PARTICLE_DIR_DOWN;
             return true;
         }
 
         GetUpRight( x, y, otherX, otherY );
-        if ( GetCanAPassThroughB( x, y, otherX, otherY, false ) && !GetHasAlreadyMoved( otherX, otherY ) )
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !GetHasAlreadyMoved( otherX, otherY ) )
         {
             Swap( x, y, otherX, otherY );
-            lastParticleDirs[x][y] = PARTICLE_DIR_DOWN_LEFT;
-            lastParticleDirs[otherX][otherY] = PARTICLE_DIR_UP_RIGHT;
+            lastParticleDirs[x][y] = PARTICLE_DIR_UP_LEFT;
+            lastParticleDirs[otherX][otherY] = PARTICLE_DIR_DOWN_RIGHT;
             return true;
         }
 
         GetUpLeft( x, y, otherX, otherY );
-        if ( GetCanAPassThroughB( x, y, otherX, otherY, false ) && !GetHasAlreadyMoved( otherX, otherY ) )
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !GetHasAlreadyMoved( otherX, otherY ) )
         {
             Swap( x, y, otherX, otherY );
-            lastParticleDirs[x][y] = PARTICLE_DIR_DOWN_RIGHT;
-            lastParticleDirs[otherX][otherY] = PARTICLE_DIR_UP_LEFT;
+            lastParticleDirs[x][y] = PARTICLE_DIR_UP_RIGHT;
+            lastParticleDirs[otherX][otherY] = PARTICLE_DIR_DOWN_LEFT;
             return true;
         }
-
+        
         return false;
     }
 
@@ -294,9 +294,12 @@ class ParticleMover
 
     private: inline bool GetCanAPassThroughB( int aX, int aY, int bX, int bY, bool reverseDensity = false )
     {
+        // TODO find out why gasses can't mix
         if ( !( GetIsInBoardBounds( aX, aY ) && GetIsInBoardBounds( bX, bY ) ) )
             return false;
 
+        if ( GetIsTheSameElement( aX, aY, bX, bY ) )
+            return false;
         if ( GetIsEmpty( bX, bY ) )
             return true;
         else{
@@ -367,7 +370,6 @@ class ParticleMover
     private: inline bool GetCanStateAPassThrougStateB( int aState, int bState )
     {
         return aState < bState || ( aState == bState && aState != PARTICLE_STATE_POWDER );
-        // return aState != PARTICLE_STATE_SOLID && bState != PARTICLE_STATE_SOLID && !( aState == bState && aState == PARTICLE_STATE_POWDER );
     }
 
 
