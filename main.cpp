@@ -10,7 +10,7 @@
 #define WINDOW_NAME "Sandbox Engine"
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEGHT 720
-#define PARTICLE_SIZE 25.0
+#define PARTICLE_SIZE 5.0
 #define UPDATE_INTERVAL_IN_MILLISECONDS 20
 
 
