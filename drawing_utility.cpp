@@ -8,7 +8,7 @@ class DrawingUtility
 {
     private: ParticlesManager* particlesManager;
 
-    public: int brushSize = 3;
+    public: int brushSize = 6;
     private: int selectedElement = 1;
     
     

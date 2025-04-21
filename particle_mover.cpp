@@ -2,6 +2,7 @@
 #define PARTICLE_MOVER
 
 #include "elements_data.cpp"
+#include "particle_dirs.cpp"
 
 class ParticleMover
 {
@@ -33,6 +34,8 @@ class ParticleMover
         if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !GetHasAlreadyMoved( otherX, otherY ) ) // TODO should move through water as well
         {
             Swap( x, y, otherX, otherY );
+            lastParticleDirs[x][y] = PARTICLE_DIR_UP;
+            lastParticleDirs[otherX][otherY] = PARTICLE_DIR_DOWN;
             return true;
         }
 
@@ -40,6 +43,8 @@ class ParticleMover
         if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !GetHasAlreadyMoved( otherX, otherY ) )
         {
             Swap( x, y, otherX, otherY );
+            lastParticleDirs[x][y] = PARTICLE_DIR_UP_LEFT;
+            lastParticleDirs[otherX][otherY] = PARTICLE_DIR_DOWN_RIGHT;
             return true;
         }
 
@@ -47,6 +52,8 @@ class ParticleMover
         if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !GetHasAlreadyMoved( otherX, otherY ) )
         {
             Swap( x, y, otherX, otherY );
+            lastParticleDirs[x][y] = PARTICLE_DIR_UP_RIGHT;
+            lastParticleDirs[otherX][otherY] = PARTICLE_DIR_DOWN_LEFT;
             return true;
         }
         
@@ -54,8 +61,10 @@ class ParticleMover
     }
 
 
-    public: bool ApplyLiquidMovement( int x, int y, bool isRightFirst )
+    public: bool ApplyLiquidMovement( int x, int y )
     {
+        bool isRightFirst = lastParticleDirs[x][y] < PARTICLE_DIR_DOWN;
+
         bool moved = ApplyPowderMovement( x, y );
         if ( moved )
             return true;
@@ -70,6 +79,8 @@ class ParticleMover
             if ( GetIsEmpty( rightX, rightY ) && !GetHasAlreadyMoved( rightX, rightY ) )
             {
                 Swap( x, y, rightX, rightY );
+                lastParticleDirs[x][y] = PARTICLE_DIR_LEFT;
+                lastParticleDirs[rightX][rightY] = PARTICLE_DIR_RIGHT;
                 return true;
             }
         }
@@ -77,6 +88,8 @@ class ParticleMover
         if ( GetIsEmpty( leftX, leftY ) && !GetHasAlreadyMoved( leftX, leftY ) )
         {
             Swap( x, y, leftX, leftY );
+            lastParticleDirs[x][y] = PARTICLE_DIR_RIGHT;
+            lastParticleDirs[leftX][leftY] = PARTICLE_DIR_LEFT;
             return true;
         }
 
@@ -85,6 +98,8 @@ class ParticleMover
             if ( GetIsEmpty( rightX, rightY ) && !GetHasAlreadyMoved( rightX, rightY ) )
             {
                 Swap( x, y, rightX, rightY );
+                lastParticleDirs[x][y] = PARTICLE_DIR_LEFT;
+                lastParticleDirs[rightX][rightY] = PARTICLE_DIR_RIGHT;
                 return true;
             }
         }
@@ -94,6 +109,8 @@ class ParticleMover
             if ( GetCanAPassThroughB( x, y, rightX, rightY ) && !GetHasAlreadyMoved( rightX, rightY && GetIsTheSameElement( x, y, leftX, leftY ) ) )
             {
                 Swap( x, y, rightX, rightY );
+                lastParticleDirs[x][y] = PARTICLE_DIR_LEFT;
+                lastParticleDirs[rightX][rightY] = PARTICLE_DIR_RIGHT;
                 return true;
             }
         }
@@ -101,6 +118,8 @@ class ParticleMover
         if ( GetCanAPassThroughB( x, y, leftX, leftY ) && !GetHasAlreadyMoved( leftX, leftY && GetIsTheSameElement( x, y, rightX, rightY ) ) )
         {
             Swap( x, y, leftX, leftY );
+            lastParticleDirs[x][y] = PARTICLE_DIR_RIGHT;
+            lastParticleDirs[leftX][leftY] = PARTICLE_DIR_LEFT;
             return true;
         }
 
@@ -109,6 +128,8 @@ class ParticleMover
             if ( GetCanAPassThroughB( x, y, rightX, rightY ) && !GetHasAlreadyMoved( rightX, rightY && GetIsTheSameElement( x, y, leftX, leftY ) ) )
             {
                 Swap( x, y, rightX, rightY );
+                lastParticleDirs[x][y] = PARTICLE_DIR_LEFT;
+                lastParticleDirs[rightX][rightY] = PARTICLE_DIR_RIGHT;
                 return true;
             }
         }
@@ -119,11 +140,15 @@ class ParticleMover
 
     public: bool ApplyGasMovement( int x, int y )
     {
+        bool isRightFirst = lastParticleDirs[x][y] < PARTICLE_DIR_DOWN;
+
         int otherX, otherY;
         GetUp( x, y, otherX, otherY );
         if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !GetHasAlreadyMoved( otherX, otherY ) )
         {
             Swap( x, y, otherX, otherY );
+            lastParticleDirs[x][y] = PARTICLE_DIR_DOWN;
+            lastParticleDirs[otherX][otherY] = PARTICLE_DIR_UP;
             return true;
         }
 
@@ -131,6 +156,8 @@ class ParticleMover
         if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !GetHasAlreadyMoved( otherX, otherY ) )
         {
             Swap( x, y, otherX, otherY );
+            lastParticleDirs[x][y] = PARTICLE_DIR_DOWN_LEFT;
+            lastParticleDirs[otherX][otherY] = PARTICLE_DIR_UP_RIGHT;
             return true;
         }
 
@@ -138,21 +165,42 @@ class ParticleMover
         if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !GetHasAlreadyMoved( otherX, otherY ) )
         {
             Swap( x, y, otherX, otherY );
+            lastParticleDirs[x][y] = PARTICLE_DIR_DOWN_RIGHT;
+            lastParticleDirs[otherX][otherY] = PARTICLE_DIR_UP_LEFT;
             return true;
         }
 
-        GetRight( x, y, otherX, otherY );
-        if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !GetHasAlreadyMoved( otherX, otherY ) )
+        if ( isRightFirst )
         {
-            Swap( x, y, otherX, otherY );
-            return true;
+            GetRight( x, y, otherX, otherY );
+            if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !GetHasAlreadyMoved( otherX, otherY ) )
+            {
+                Swap( x, y, otherX, otherY );
+                lastParticleDirs[x][y] = PARTICLE_DIR_LEFT;
+                lastParticleDirs[otherX][otherY] = PARTICLE_DIR_RIGHT;
+                return true;
+            }
         }
 
         GetLeft( x, y, otherX, otherY );
         if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !GetHasAlreadyMoved( otherX, otherY ) )
         {
             Swap( x, y, otherX, otherY );
+            lastParticleDirs[x][y] = PARTICLE_DIR_RIGHT;
+            lastParticleDirs[otherX][otherY] = PARTICLE_DIR_LEFT;
             return true;
+        }
+
+        if ( !isRightFirst )
+        {
+            GetRight( x, y, otherX, otherY );
+            if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !GetHasAlreadyMoved( otherX, otherY ) )
+            {
+                Swap( x, y, otherX, otherY );
+                lastParticleDirs[x][y] = PARTICLE_DIR_LEFT;
+                lastParticleDirs[otherX][otherY] = PARTICLE_DIR_RIGHT;
+                return true;
+            }
         }
         
         return false;
@@ -297,6 +345,8 @@ class ParticleMover
 
     private: inline bool GetIsTheSameElement( int x, int y, int otherX, int otherY )
     {
+        if ( !( GetIsInBoardBounds( x, y ) && GetIsInBoardBounds( otherX, otherY ) ) )
+            return false;
         return board[x][y] == board[otherX][otherY];
     }
 
@@ -392,7 +442,7 @@ class ParticleMover
 
     private: inline bool GetHasAlreadyMoved( int x, int y )
     {
-        return false;
+        // return false;
         if ( !GetIsInBoardBounds( x, y ) )
             return true;
         return alreadyMoved[x][y];

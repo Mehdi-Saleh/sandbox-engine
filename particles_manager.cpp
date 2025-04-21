@@ -4,17 +4,7 @@
 #include <iostream>
 #include "particle_mover.cpp"
 #include "elements_data.cpp"
-
-#define PARTICLE_DIR_NONE 0
-#define PARTICLE_DIR_UP 1
-#define PARTICLE_DIR_UP_RIGHT 2
-#define PARTICLE_DIR_RIGHT 3
-#define PARTICLE_DIR_DOWN_RIGHT 4
-#define PARTICLE_DIR_DOWN 5
-#define PARTICLE_DIR_DOWN_LEFT 6
-#define PARTICLE_DIR_LEFT 7
-#define PARTICLE_DIR_UP_LEFT 8
-
+#include "particle_dirs.cpp"
 
 
 class ParticlesManager
@@ -134,7 +124,7 @@ class ParticlesManager
     public: void Update()
     {
         ClearAlreadyMoved();
-        if ( updateCount%6 < 3 )
+        if ( updateCount%2 < 1 )
             for ( int j = boardHeight - 1; j >= 0; j-- )
                 for ( int i = boardWidth - 1; i >= 0; i-- )
                 {
@@ -206,7 +196,7 @@ class ParticlesManager
         if ( particleData->state == PARTICLE_STATE_POWDER )
             particleMover.ApplyPowderMovement( x, y );
         else if (  particleData->state == PARTICLE_STATE_LIQUID )
-            particleMover.ApplyLiquidMovement( x, y, true );
+            particleMover.ApplyLiquidMovement( x, y );
         else if (  particleData->state == PARTICLE_STATE_GAS )
         {
             particleMover.ApplyGasMovement( x, y );
