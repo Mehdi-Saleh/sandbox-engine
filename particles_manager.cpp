@@ -5,15 +5,30 @@
 #include "particle_mover.cpp"
 #include "elements_data.cpp"
 
+#define PARTICLE_DIR_NONE 0
+#define PARTICLE_DIR_UP 1
+#define PARTICLE_DIR_UP_RIGHT 2
+#define PARTICLE_DIR_RIGHT 3
+#define PARTICLE_DIR_DOWN_RIGHT 4
+#define PARTICLE_DIR_DOWN 5
+#define PARTICLE_DIR_DOWN_LEFT 6
+#define PARTICLE_DIR_LEFT 7
+#define PARTICLE_DIR_UP_LEFT 8
+
+
+
 class ParticlesManager
 {
     private: ElementsData* elementsData;
     private: int** board = nullptr;
     private: bool** alreadyMoved = nullptr;
+    private: unsigned short** lastParticleDirs = nullptr;
     private: int boardWidth = 10;
     private: int boardHeight = 10;
 
-    ParticleMover particleMover;
+    private: ParticleMover particleMover;
+
+    private: unsigned long updateCount = 0;
 
 
     public: ParticlesManager( int boardWidth, int boardHeight, ElementsData* elementsData )
@@ -23,7 +38,8 @@ class ParticlesManager
         this->elementsData = elementsData;
         CreateBoard();
         CreateAlreadyMoved();
-        particleMover = ParticleMover( board, alreadyMoved, boardWidth, boardHeight, elementsData );
+        CreateLastParticleDirs();
+        particleMover = ParticleMover( board, alreadyMoved, lastParticleDirs, boardWidth, boardHeight, elementsData );
     }
 
 
@@ -31,6 +47,7 @@ class ParticlesManager
     {
         DestroyBoard();
         DestroyAlreadyMoved();
+        DestroyLastParticleDirs();
     }
 
 
@@ -72,6 +89,20 @@ class ParticlesManager
     }
 
 
+    private: void CreateLastParticleDirs()
+    {
+        lastParticleDirs = new unsigned short*[boardWidth];
+        for ( int i = 0; i < boardWidth; i++ )
+        {
+            lastParticleDirs[i] = new unsigned short[boardHeight];
+            for ( int j = 0; j < boardHeight; j++ )
+            {
+                lastParticleDirs[i][j] = 0;
+            }
+        }
+    }
+
+
     private: void DestroyAlreadyMoved()
     {
         for ( int i = 0; i < boardWidth; i++ )
@@ -79,6 +110,16 @@ class ParticlesManager
             delete [] alreadyMoved[i];
         }
         delete [] alreadyMoved;
+    }
+
+
+    private: void DestroyLastParticleDirs()
+    {
+        for ( int i = 0; i < boardWidth; i++ )
+        {
+            delete [] lastParticleDirs[i];
+        }
+        delete [] lastParticleDirs;
     }
 
 
@@ -93,21 +134,24 @@ class ParticlesManager
     public: void Update()
     {
         ClearAlreadyMoved();
-        for ( int j = boardHeight - 1; j >= 0; j-- )
-            for ( int i = 0; i < boardWidth; i++ )
-            {
-                if ( alreadyMoved[i][j] || board[i][j] == -1 )
-                    continue;
-                ElementParticleData* particleData = elementsData->GetParticleData( board[i][j] );
-                if ( particleData->state == PARTICLE_STATE_POWDER )
-                    particleMover.ApplyPowderMovement( i, j );
-                else if (  particleData->state == PARTICLE_STATE_LIQUID )
-                    particleMover.ApplyLiquidMovement( i, j );
-                else if (  particleData->state == PARTICLE_STATE_GAS )
+        if ( updateCount%6 < 3 )
+            for ( int j = boardHeight - 1; j >= 0; j-- )
+                for ( int i = boardWidth - 1; i >= 0; i-- )
                 {
-                    particleMover.ApplyGasMovement( i, j );
+                    if ( alreadyMoved[i][j] || board[i][j] == -1 )
+                        continue;
+                    UpdateParticle( i, j );
                 }
-            }
+        else
+            for ( int j = boardHeight - 1; j >= 0; j-- )
+                for ( int i = 0; i < boardWidth; i++ )
+                {
+                    if ( alreadyMoved[i][j] || board[i][j] == -1 )
+                        continue;
+                    UpdateParticle( i, j );
+                }
+        
+        updateCount++;
     }
 
 
@@ -153,6 +197,20 @@ class ParticlesManager
             || y >= boardHeight 
             || y < 0
             );
+    }
+
+
+    private: inline void UpdateParticle( int x, int y )
+    {
+        ElementParticleData* particleData = elementsData->GetParticleData( board[x][y] );
+        if ( particleData->state == PARTICLE_STATE_POWDER )
+            particleMover.ApplyPowderMovement( x, y );
+        else if (  particleData->state == PARTICLE_STATE_LIQUID )
+            particleMover.ApplyLiquidMovement( x, y, true );
+        else if (  particleData->state == PARTICLE_STATE_GAS )
+        {
+            particleMover.ApplyGasMovement( x, y );
+        }
     }
 };
 
