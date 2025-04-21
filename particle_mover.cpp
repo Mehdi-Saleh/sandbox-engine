@@ -28,21 +28,21 @@ class ParticleMover
     {
         int otherX, otherY;
         GetDown( x, y, otherX, otherY );
-        if ( GetCanAPassThroughB( x, y, otherX, otherY ) ) // TODO should move through water as well
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !alreadyMoved[otherX][otherY] ) // TODO should move through water as well
         {
             Swap( x, y, otherX, otherY );
             return true;
         }
 
         GetDownRight( x, y, otherX, otherY );
-        if ( GetCanAPassThroughB( x, y, otherX, otherY ) )
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !alreadyMoved[otherX][otherY]  )
         {
             Swap( x, y, otherX, otherY );
             return true;
         }
 
         GetDownLeft( x, y, otherX, otherY );
-        if ( GetCanAPassThroughB( x, y, otherX, otherY ) )
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !alreadyMoved[otherX][otherY]  )
         {
             Swap( x, y, otherX, otherY );
             return true;
@@ -60,14 +60,14 @@ class ParticleMover
 
         int otherX, otherY;
         GetRight( x, y, otherX, otherY );
-        if ( GetCanAPassThroughB( x, y, otherX, otherY ) )
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !alreadyMoved[otherX][otherY]  )
         {
             Swap( x, y, otherX, otherY );
             return true;
         }
 
         GetLeft( x, y, otherX, otherY );
-        if ( GetCanAPassThroughB( x, y, otherX, otherY ) )
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !alreadyMoved[otherX][otherY]  )
         {
             Swap( x, y, otherX, otherY );
             return true;
@@ -81,35 +81,35 @@ class ParticleMover
     {
         int otherX, otherY;
         GetUp( x, y, otherX, otherY );
-        if ( GetCanAPassThroughB( x, y, otherX, otherY ) )
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !alreadyMoved[otherX][otherY]  )
         {
             Swap( x, y, otherX, otherY );
             return true;
         }
 
         GetUpRight( x, y, otherX, otherY );
-        if ( GetCanAPassThroughB( x, y, otherX, otherY ) )
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !alreadyMoved[otherX][otherY]  )
         {
             Swap( x, y, otherX, otherY );
             return true;
         }
 
         GetUpLeft( x, y, otherX, otherY );
-        if ( GetCanAPassThroughB( x, y, otherX, otherY ) )
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !alreadyMoved[otherX][otherY]  )
         {
             Swap( x, y, otherX, otherY );
             return true;
         }
 
         GetRight( x, y, otherX, otherY );
-        if ( GetCanAPassThroughB( x, y, otherX, otherY ) )
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !alreadyMoved[otherX][otherY]  )
         {
             Swap( x, y, otherX, otherY );
             return true;
         }
 
         GetLeft( x, y, otherX, otherY );
-        if ( GetCanAPassThroughB( x, y, otherX, otherY ) )
+        if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !alreadyMoved[otherX][otherY]  )
         {
             Swap( x, y, otherX, otherY );
             return true;
@@ -337,8 +337,8 @@ class ParticleMover
         int temp = board[xA][yA];
         board[xA][yA] = board[xB][yB];
         board[xB][yB] = temp;
-        alreadyMoved[xA][yA] = true;
-        alreadyMoved[xB][yB] = true;
+        alreadyMoved[xA][yA] = board[xA][yA] != -1;
+        alreadyMoved[xB][yB] = board[xB][yB] != -1;
     }
 
 
