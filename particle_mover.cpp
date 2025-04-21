@@ -63,11 +63,23 @@ class ParticleMover
 
     public: bool ApplyLiquidMovement( int x, int y )
     {
-        bool isRightFirst = lastParticleDirs[x][y] < PARTICLE_DIR_DOWN;
-
-        bool moved = ApplyPowderMovement( x, y );
+        bool moved = ApplyLiquidMovementNoLeftAndRight( x, y );
         if ( moved )
             return true;
+
+        return ApplyLiquidMovementOnlyLeftAndRight( x, y );
+    }
+
+
+    public: bool ApplyLiquidMovementNoLeftAndRight( int x, int y )
+    {
+        return ApplyPowderMovement( x, y );
+    }
+
+
+    public: bool ApplyLiquidMovementOnlyLeftAndRight( int x, int y )
+    {
+        bool isRightFirst = lastParticleDirs[x][y] < PARTICLE_DIR_DOWN;
 
         int rightX, rightY;
         int leftX, leftY;
@@ -106,7 +118,7 @@ class ParticleMover
 
         if ( isRightFirst )
         {
-            if ( GetCanAPassThroughB( x, y, rightX, rightY ) && !GetHasAlreadyMoved( rightX, rightY && GetIsTheSameElement( x, y, leftX, leftY ) ) )
+            if ( GetCanAPassThroughB( x, y, rightX, rightY ) && !GetHasAlreadyMoved( rightX, rightY ) && GetIsTheSameElement( x, y, leftX, leftY ) )
             {
                 Swap( x, y, rightX, rightY );
                 lastParticleDirs[x][y] = PARTICLE_DIR_LEFT;
@@ -115,7 +127,7 @@ class ParticleMover
             }
         }
 
-        if ( GetCanAPassThroughB( x, y, leftX, leftY ) && !GetHasAlreadyMoved( leftX, leftY && GetIsTheSameElement( x, y, rightX, rightY ) ) )
+        if ( GetCanAPassThroughB( x, y, leftX, leftY ) && !GetHasAlreadyMoved( leftX, leftY ) && GetIsTheSameElement( x, y, rightX, rightY ) )
         {
             Swap( x, y, leftX, leftY );
             lastParticleDirs[x][y] = PARTICLE_DIR_RIGHT;
@@ -125,7 +137,7 @@ class ParticleMover
 
         if ( !isRightFirst )
         {
-            if ( GetCanAPassThroughB( x, y, rightX, rightY ) && !GetHasAlreadyMoved( rightX, rightY && GetIsTheSameElement( x, y, leftX, leftY ) ) )
+            if ( GetCanAPassThroughB( x, y, rightX, rightY ) && !GetHasAlreadyMoved( rightX, rightY ) && GetIsTheSameElement( x, y, leftX, leftY ) )
             {
                 Swap( x, y, rightX, rightY );
                 lastParticleDirs[x][y] = PARTICLE_DIR_LEFT;
@@ -140,11 +152,19 @@ class ParticleMover
 
     public: bool ApplyGasMovement( int x, int y )
     {
-        bool isRightFirst = lastParticleDirs[x][y] < PARTICLE_DIR_DOWN;
+        bool moved = ApplyGasMovementNoLeftAndRight( x, y );
+        if ( moved )
+            return true;
 
+        return ApplyGasMovementOnlyLeftAndRight( x, y );
+    }
+
+
+    public: bool ApplyGasMovementNoLeftAndRight( int x, int y )
+    {
         int otherX, otherY;
         GetUp( x, y, otherX, otherY );
-        if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !GetHasAlreadyMoved( otherX, otherY ) )
+        if ( GetCanAPassThroughB( x, y, otherX, otherY, false ) && !GetHasAlreadyMoved( otherX, otherY ) )
         {
             Swap( x, y, otherX, otherY );
             lastParticleDirs[x][y] = PARTICLE_DIR_DOWN;
@@ -153,7 +173,7 @@ class ParticleMover
         }
 
         GetUpRight( x, y, otherX, otherY );
-        if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !GetHasAlreadyMoved( otherX, otherY ) )
+        if ( GetCanAPassThroughB( x, y, otherX, otherY, false ) && !GetHasAlreadyMoved( otherX, otherY ) )
         {
             Swap( x, y, otherX, otherY );
             lastParticleDirs[x][y] = PARTICLE_DIR_DOWN_LEFT;
@@ -162,7 +182,7 @@ class ParticleMover
         }
 
         GetUpLeft( x, y, otherX, otherY );
-        if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !GetHasAlreadyMoved( otherX, otherY ) )
+        if ( GetCanAPassThroughB( x, y, otherX, otherY, false ) && !GetHasAlreadyMoved( otherX, otherY ) )
         {
             Swap( x, y, otherX, otherY );
             lastParticleDirs[x][y] = PARTICLE_DIR_DOWN_RIGHT;
@@ -170,10 +190,19 @@ class ParticleMover
             return true;
         }
 
+        return false;
+    }
+
+
+    public: bool ApplyGasMovementOnlyLeftAndRight( int x, int y )
+    {
+        bool isRightFirst = lastParticleDirs[x][y] < PARTICLE_DIR_DOWN;
+
+        int otherX, otherY;
         if ( isRightFirst )
         {
             GetRight( x, y, otherX, otherY );
-            if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !GetHasAlreadyMoved( otherX, otherY ) )
+            if ( GetCanAPassThroughB( x, y, otherX, otherY, false ) && !GetHasAlreadyMoved( otherX, otherY ) )
             {
                 Swap( x, y, otherX, otherY );
                 lastParticleDirs[x][y] = PARTICLE_DIR_LEFT;
@@ -183,7 +212,7 @@ class ParticleMover
         }
 
         GetLeft( x, y, otherX, otherY );
-        if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !GetHasAlreadyMoved( otherX, otherY ) )
+        if ( GetCanAPassThroughB( x, y, otherX, otherY, false ) && !GetHasAlreadyMoved( otherX, otherY ) )
         {
             Swap( x, y, otherX, otherY );
             lastParticleDirs[x][y] = PARTICLE_DIR_RIGHT;
@@ -194,7 +223,7 @@ class ParticleMover
         if ( !isRightFirst )
         {
             GetRight( x, y, otherX, otherY );
-            if ( GetCanAPassThroughB( x, y, otherX, otherY ) && !GetHasAlreadyMoved( otherX, otherY ) )
+            if ( GetCanAPassThroughB( x, y, otherX, otherY, false ) && !GetHasAlreadyMoved( otherX, otherY ) )
             {
                 Swap( x, y, otherX, otherY );
                 lastParticleDirs[x][y] = PARTICLE_DIR_LEFT;
@@ -263,11 +292,10 @@ class ParticleMover
     }
 
 
-    private: inline bool GetCanAPassThroughB( int aX, int aY, int bX, int bY )
+    private: inline bool GetCanAPassThroughB( int aX, int aY, int bX, int bY, bool reverseDensity = false )
     {
         if ( !( GetIsInBoardBounds( aX, aY ) && GetIsInBoardBounds( bX, bY ) ) )
             return false;
-
 
         if ( GetIsEmpty( bX, bY ) )
             return true;
@@ -276,7 +304,7 @@ class ParticleMover
                 int bState = GetParticleState( bX, bY );
                 return (
                         GetCanStateAPassThrougStateB( aState, bState )
-                        && GetIsADenserThanB( aX, aY, bX, bY )
+                        && ( GetIsADenserThanB( aX, aY, bX, bY ) xor reverseDensity )
                 );
             }
     }

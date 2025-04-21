@@ -57,7 +57,7 @@ class ElementsData
     {
         elementsParticleData = new ElementParticleData[5];
         elementsRenderingData = new ElementRenderingData[5];
-        elementsCount = 5;
+        elementsCount = 6;
 
         // Element 0
         elementsParticleData[0].state = PARTICLE_STATE_SOLID;
@@ -113,6 +113,18 @@ class ElementsData
         color.b = 10;
         color.a = 255;
         elementsRenderingData[4].color = color;
+
+
+        // Element 5
+        elementsParticleData[5].state = PARTICLE_STATE_GAS;
+        elementsParticleData[5].density = 0.03;
+        elementsRenderingData[5].name = "Smoke";
+        color = SDL_Color();
+        color.r = 70;
+        color.g = 72;
+        color.b = 98;
+        color.a = 255;
+        elementsRenderingData[5].color = color;
     }
 
 

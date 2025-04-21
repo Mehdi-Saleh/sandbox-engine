@@ -18,7 +18,7 @@ class ParticlesManager
 
     private: ParticleMover particleMover;
 
-    private: unsigned long updateCount = 0;
+    private: bool lastUpdateWasLeftToRight = false;
 
 
     public: ParticlesManager( int boardWidth, int boardHeight, ElementsData* elementsData )
@@ -124,24 +124,42 @@ class ParticlesManager
     public: void Update()
     {
         ClearAlreadyMoved();
-        if ( updateCount%2 < 1 )
+        if ( lastUpdateWasLeftToRight )
+        {
             for ( int j = boardHeight - 1; j >= 0; j-- )
                 for ( int i = boardWidth - 1; i >= 0; i-- )
                 {
                     if ( alreadyMoved[i][j] || board[i][j] == -1 )
                         continue;
-                    UpdateParticle( i, j );
+                    UpdateParticleNoLeftAndRight( i, j );
                 }
+            for ( int j = boardHeight - 1; j >= 0; j-- )
+                for ( int i = boardWidth - 1; i >= 0; i-- )
+                {
+                    if ( alreadyMoved[i][j] || board[i][j] == -1 )
+                        continue;
+                    UpdateParticleOnlyLeftAndRight( i, j );
+                }
+        }
         else
+        {
             for ( int j = boardHeight - 1; j >= 0; j-- )
                 for ( int i = 0; i < boardWidth; i++ )
                 {
                     if ( alreadyMoved[i][j] || board[i][j] == -1 )
                         continue;
-                    UpdateParticle( i, j );
+                    UpdateParticleNoLeftAndRight( i, j );
                 }
+            for ( int j = boardHeight - 1; j >= 0; j-- )
+                for ( int i = 0; i < boardWidth; i++ )
+                {
+                    if ( alreadyMoved[i][j] || board[i][j] == -1 )
+                        continue;
+                    UpdateParticleOnlyLeftAndRight( i, j );
+                }
+        }
         
-        updateCount++;
+        lastUpdateWasLeftToRight = !lastUpdateWasLeftToRight;
     }
 
 
@@ -201,6 +219,28 @@ class ParticlesManager
         {
             particleMover.ApplyGasMovement( x, y );
         }
+    }
+
+
+    private: inline void UpdateParticleNoLeftAndRight( int x, int y )
+    {
+        ElementParticleData* particleData = elementsData->GetParticleData( board[x][y] );
+        if ( particleData->state == PARTICLE_STATE_POWDER )
+            particleMover.ApplyPowderMovement( x, y );
+        else if (  particleData->state == PARTICLE_STATE_LIQUID )
+            particleMover.ApplyLiquidMovementNoLeftAndRight( x, y );
+        else if (  particleData->state == PARTICLE_STATE_GAS )
+            particleMover.ApplyGasMovementNoLeftAndRight( x, y );
+    }
+
+
+    private: inline void UpdateParticleOnlyLeftAndRight( int x, int y )
+    {
+        ElementParticleData* particleData = elementsData->GetParticleData( board[x][y] );
+        if (  particleData->state == PARTICLE_STATE_LIQUID )
+            particleMover.ApplyLiquidMovementOnlyLeftAndRight( x, y );
+        else if (  particleData->state == PARTICLE_STATE_GAS )
+            particleMover.ApplyGasMovementOnlyLeftAndRight( x, y );
     }
 };
 
