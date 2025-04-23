@@ -7,9 +7,33 @@
 },
 {
   "directory": "/home/mehdi/My Projects/sandbox-engine/build",
+  "command": "/usr/bin/g++ -g -std=gnu++17 -o CMakeFiles/SandboxEngine.dir/sandbox.cpp.o -c \"/home/mehdi/My Projects/sandbox-engine/sandbox.cpp\"",
+  "file": "/home/mehdi/My Projects/sandbox-engine/sandbox.cpp",
+  "output": "CMakeFiles/SandboxEngine.dir/sandbox.cpp.o"
+},
+{
+  "directory": "/home/mehdi/My Projects/sandbox-engine/build",
   "command": "/usr/bin/g++ -g -std=gnu++17 -o CMakeFiles/SandboxEngine.dir/renderer.cpp.o -c \"/home/mehdi/My Projects/sandbox-engine/renderer.cpp\"",
   "file": "/home/mehdi/My Projects/sandbox-engine/renderer.cpp",
   "output": "CMakeFiles/SandboxEngine.dir/renderer.cpp.o"
+},
+{
+  "directory": "/home/mehdi/My Projects/sandbox-engine/build",
+  "command": "/usr/bin/g++ -g -std=gnu++17 -o CMakeFiles/SandboxEngine.dir/board_renderer.cpp.o -c \"/home/mehdi/My Projects/sandbox-engine/board_renderer.cpp\"",
+  "file": "/home/mehdi/My Projects/sandbox-engine/board_renderer.cpp",
+  "output": "CMakeFiles/SandboxEngine.dir/board_renderer.cpp.o"
+},
+{
+  "directory": "/home/mehdi/My Projects/sandbox-engine/build",
+  "command": "/usr/bin/g++ -g -std=gnu++17 -o CMakeFiles/SandboxEngine.dir/ui_renderer.cpp.o -c \"/home/mehdi/My Projects/sandbox-engine/ui_renderer.cpp\"",
+  "file": "/home/mehdi/My Projects/sandbox-engine/ui_renderer.cpp",
+  "output": "CMakeFiles/SandboxEngine.dir/ui_renderer.cpp.o"
+},
+{
+  "directory": "/home/mehdi/My Projects/sandbox-engine/build",
+  "command": "/usr/bin/g++ -g -std=gnu++17 -o CMakeFiles/SandboxEngine.dir/elements_data.cpp.o -c \"/home/mehdi/My Projects/sandbox-engine/elements_data.cpp\"",
+  "file": "/home/mehdi/My Projects/sandbox-engine/elements_data.cpp",
+  "output": "CMakeFiles/SandboxEngine.dir/elements_data.cpp.o"
 },
 {
   "directory": "/home/mehdi/My Projects/sandbox-engine/build",
@@ -22,6 +46,12 @@
   "command": "/usr/bin/g++ -g -std=gnu++17 -o CMakeFiles/SandboxEngine.dir/particle_mover.cpp.o -c \"/home/mehdi/My Projects/sandbox-engine/particle_mover.cpp\"",
   "file": "/home/mehdi/My Projects/sandbox-engine/particle_mover.cpp",
   "output": "CMakeFiles/SandboxEngine.dir/particle_mover.cpp.o"
+},
+{
+  "directory": "/home/mehdi/My Projects/sandbox-engine/build",
+  "command": "/usr/bin/g++ -g -std=gnu++17 -o CMakeFiles/SandboxEngine.dir/particle_dirs.cpp.o -c \"/home/mehdi/My Projects/sandbox-engine/particle_dirs.cpp\"",
+  "file": "/home/mehdi/My Projects/sandbox-engine/particle_dirs.cpp",
+  "output": "CMakeFiles/SandboxEngine.dir/particle_dirs.cpp.o"
 },
 {
   "directory": "/home/mehdi/My Projects/sandbox-engine/build",

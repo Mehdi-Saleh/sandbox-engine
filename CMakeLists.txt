@@ -9,9 +9,14 @@ find_package(SDL3 REQUIRED)
 add_executable(
 		${PROJECT_NAME} 
 		main.cpp 
+		sandbox.cpp
 		renderer.cpp 
+		board_renderer.cpp
+		ui_renderer.cpp
+		elements_data.cpp
 		particles_manager.cpp
 		particle_mover.cpp
+		particle_dirs.cpp
 		input_handler.cpp
 		drawing_utility.cpp
 		)

@@ -5,11 +5,13 @@
 #include <iostream>
 #include <string>
 #include "elements_data.cpp"
+#include "board_renderer.cpp"
 
 
 class Renderer
 {
-    private: ElementsData* elementsData;
+    private: BoardRenderer* boardRenderer;
+    
     private: SDL_Window* window = nullptr;
     private: SDL_Renderer* sdlRenderer = nullptr;
 
@@ -17,12 +19,10 @@ class Renderer
     private: int windowWidth = 10;
     private: int windowHeight = 10;
 
-    private: int** board = nullptr;
-    private: int boardWidth = 10;
-    private: int boardHeight = 10;
-
     private: float particleSize = 8;
-    private: SDL_FRect particleRect { 0, 0, 10, 10 };
+
+    private: int** board = nullptr;
+    private: ElementsData* elementsData = nullptr;
 
 
     public: Renderer( std::string windowName, int width, int height, float partileSize, int** board, ElementsData* elementsData )
@@ -47,8 +47,8 @@ class Renderer
     public: int Init()
     {
         int exitCode = 0;
-        InitBoard();
         exitCode = InitSDL();
+        InitBoard();
         return exitCode;
     }
 
@@ -78,33 +78,18 @@ class Renderer
 
     private: void InitBoard()
     {
-        boardWidth = windowWidth / particleSize;
-        boardHeight = windowHeight / particleSize;
-        particleRect.h = particleRect.w = particleSize;
+        boardRenderer = new BoardRenderer( windowWidth, windowHeight, particleSize, board, elementsData );
+        boardRenderer->Init();
     }
 
 
-    public: void RenderBoard()
+    public: void Render()
     {
         SDL_SetRenderDrawColor( sdlRenderer, 0, 0, 0, 255 );
         SDL_RenderClear( sdlRenderer );
 
-        for ( int i = 0; i < boardWidth; i++ )
-            for ( int j = 0; j < boardHeight; j++ )
-            {
-                // Ignore empty parts
-                if ( board[i][j] == -1 )
-                    continue;
-                
-                SDL_FPoint screenPoint = GetBoardToScreenSpace( i, j );
-                particleRect.x = screenPoint.x;
-                particleRect.y = screenPoint.y;
-                ElementRenderingData* particleData = elementsData->GetRenderingData( board[i][j] );
-                SDL_Color color = particleData->color;
-                SDL_SetRenderDrawColor( sdlRenderer, color.r, color.g, color.b, color.a );
-                SDL_RenderFillRect( sdlRenderer, &particleRect );
-            }
-        
+        boardRenderer->Render( sdlRenderer );
+
         SDL_RenderPresent( sdlRenderer ); // Render the screen
     }
 
@@ -123,12 +108,10 @@ class Renderer
         SDL_FPoint point = SDL_FPoint();
         point.x = screenX / particleSize;
         point.y = screenY / particleSize;
+        // point.x = 1;
+        // point.y = 1;
         return point;
     }
-
-
-    // TODO
-    // public: void UpdateBoard( particles ) {}
 };
 
 #endif

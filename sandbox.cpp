@@ -1,3 +1,6 @@
+#ifndef SANDBOX
+#define SANDBOX
+
 #include <SDL3/SDL.h>
 #include <iostream>
 #include "renderer.cpp"
@@ -96,6 +99,8 @@ class Sandbox
 
     private: void Render()
     {
-        renderer.RenderBoard();
+        renderer.Render();
     }
 };
+
+#endif
