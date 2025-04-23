@@ -27,6 +27,8 @@ class DrawingUtility
     public: void SetBrushSize( int size )
     {
         brushSize = size;
+        if ( brushSize < 0 )
+            brushSize = 0;
     }
 
 
@@ -39,6 +41,8 @@ class DrawingUtility
     public: void DecreaseBrushSize( int sizeDecrease )
     {
         brushSize -= sizeDecrease;
+        if ( brushSize < 0 )
+            brushSize = 0;
     }
 
 

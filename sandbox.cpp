@@ -28,6 +28,8 @@ class Sandbox
     SDL_Event event;
     Uint64 timePassedSinceUpdateInMilliseconds = 0;
     bool running = true;
+    SDL_FPoint mouseScreenPos;
+    SDL_FPoint mouseBoardPos;
 
 
     public: void Start()
@@ -57,19 +59,18 @@ class Sandbox
     private: void HandleInput()
     {
         inputHandler.HandleInput();
+        mouseScreenPos = inputHandler.GetMousePos();
+        mouseBoardPos = renderer.GetScreenToBoardSpace( mouseScreenPos.x, mouseScreenPos.y );
+
         if ( inputHandler.GetIsQuiting() )
             running = false;
         else if ( inputHandler.GetIsAddingParticle() )
         {
-            SDL_FPoint mousePos = inputHandler.GetMousePos();
-            mousePos = renderer.GetScreenToBoardSpace( mousePos.x, mousePos.y );
-            drawingUtility.AddParticles( mousePos.x, mousePos.y );
+            drawingUtility.AddParticles( mouseBoardPos.x, mouseBoardPos.y );
         }
         else if ( inputHandler.GetIsErasingParticle() )
         {
-            SDL_FPoint mousePos = inputHandler.GetMousePos();
-            mousePos = renderer.GetScreenToBoardSpace( mousePos.x, mousePos.y );
-            drawingUtility.EraseParticles( mousePos.x, mousePos.y );
+            drawingUtility.EraseParticles( mouseBoardPos.x, mouseBoardPos.y );
         }
         else if ( inputHandler.GetIsIncreasingBrushSize() )
         {
@@ -99,6 +100,8 @@ class Sandbox
 
     private: void Render()
     {
+        renderer.SetMousePos( mouseScreenPos );
+        renderer.SetMouseMarkerRadius( drawingUtility.brushSize );
         renderer.Render();
     }
 };

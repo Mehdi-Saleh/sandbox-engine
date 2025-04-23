@@ -6,11 +6,14 @@
 #include <string>
 #include "elements_data.cpp"
 #include "board_renderer.cpp"
+#include "ui_renderer.cpp"
 
 
 class Renderer
 {
     private: BoardRenderer* boardRenderer;
+    private: UIRenderer* uiRenderer;
+
     
     private: SDL_Window* window = nullptr;
     private: SDL_Renderer* sdlRenderer = nullptr;
@@ -38,6 +41,8 @@ class Renderer
 
     ~Renderer()
     {
+        delete boardRenderer;
+        delete uiRenderer;
         SDL_DestroyRenderer( sdlRenderer );
         SDL_DestroyWindow( window );
         SDL_Quit();
@@ -49,6 +54,7 @@ class Renderer
         int exitCode = 0;
         exitCode = InitSDL();
         InitBoard();
+        InitUI();
         return exitCode;
     }
 
@@ -83,14 +89,34 @@ class Renderer
     }
 
 
+    private: void InitUI()
+    {
+        uiRenderer = new UIRenderer( windowWidth, windowHeight, particleSize, elementsData );
+        uiRenderer->Init();
+    }
+
+
     public: void Render()
     {
         SDL_SetRenderDrawColor( sdlRenderer, 0, 0, 0, 255 );
         SDL_RenderClear( sdlRenderer );
 
         boardRenderer->Render( sdlRenderer );
+        uiRenderer->Render( sdlRenderer );
 
         SDL_RenderPresent( sdlRenderer ); // Render the screen
+    }
+
+
+    public: void SetMousePos( SDL_FPoint mouseScreenPos )
+    {
+        uiRenderer->mousePos = mouseScreenPos;
+    }
+
+
+    public: void SetMouseMarkerRadius( int radiusOnBoard )
+    {
+        uiRenderer->SetMouseMarkerRadius( radiusOnBoard );
     }
 
 
