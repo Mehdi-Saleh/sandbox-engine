@@ -46,10 +46,17 @@ class InputHandler
                 else if ( event.button.button == SDL_BUTTON_RIGHT )
                     isErasingParticle= false;
             }
+            else if ( event.type == SDL_EVENT_MOUSE_WHEEL ) 
+            {
+                if ( event.wheel.y < 0 )
+                    isDecreasingBrushSize = true;
+                else if ( event.wheel.y > 0 )
+                    isIncreasingBrushSize = true;
+            }
             else if (event.type == SDL_EVENT_KEY_DOWN) 
             {
-                isIncreasingBrushSize = event.key.key == SDLK_W;
-                isDecreasingBrushSize = event.key.key == SDLK_S;
+                isIncreasingBrushSize |= event.key.scancode == SDL_SCANCODE_W;
+                isDecreasingBrushSize |= event.key.scancode == SDL_SCANCODE_S;
 
                 if ( event.key.key == SDLK_1 )
                     isSelectingElement = 1;
