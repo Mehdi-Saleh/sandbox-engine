@@ -184,10 +184,16 @@ class UIElement
     private: SDL_FPoint GetRealSize() const
     {
         SDL_FPoint realSize = size;
-        if ( !isRectDirty || parent == nullptr )
+        if ( !isRectDirty )
         {
             realSize.x = rect.w;
             realSize.y = rect.h;
+            return realSize;
+        }
+        else if ( parent == nullptr )
+        {
+            realSize.x = size.x;
+            realSize.y = size.y;
             return realSize;
         }
 

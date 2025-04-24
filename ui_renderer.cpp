@@ -54,6 +54,14 @@ class UIRenderer
             SDL_Color{ 255, 255, 100, 255 }
             );
         uiRoot->AddChild( testRect );
+        // TODO what about the parent??!!!
+
+        // UIElement* testRect = new UIElement( 
+        //     UI_ANCHOR_MODE_DEFAULT,
+        //     SDL_FPoint{ 0, 0 }, 
+        //     SDL_FPoint{ 100, 100 }
+        //     );
+        // uiRoot->AddChild( testRect );
         
         uiRoot->UpdateSelfAndChildren();
     }
