@@ -54,7 +54,7 @@ class UIRenderer
     }
 
 
-    int DrawCircle( SDL_Renderer * renderer, int x, int y, int radius )
+    int DrawCircle( SDL_Renderer* renderer, int x, int y, int radius )
     {
         int offsetX = 0;
         int offsetY = radius;
