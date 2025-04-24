@@ -2,23 +2,24 @@
 #define UI_ELEMENT
 
 #include <vector>
+#include <iostream>
 #include <SDL3/SDL.h>
 #include "ui_anchor_modes.cpp"
 
 class UIElement
 {
     private: short anchorMode = 0;
-    private: SDL_FPoint pivot;
-    private: SDL_Point relativePos { 0, 0 };
-    private: SDL_Point size { 10, 10 };
-    protected: SDL_Rect rect;
+    private: SDL_FPoint pivot { 0, 0 };
+    private: SDL_FPoint relativePos { 0, 0 };
+    private: SDL_FPoint size { 10, 10 };
+    protected: SDL_FRect rect;
     protected: bool isRectDirty = true;
 
     protected: UIElement* parent = nullptr;
-    protected: std::vector<UIElement> children;
+    protected: std::vector<UIElement*> children;
 
 
-    public: UIElement( short anchorMode, SDL_Point relativePos, SDL_Point size )
+    public: UIElement( short anchorMode, SDL_FPoint relativePos, SDL_FPoint size )
     {
         this->anchorMode = anchorMode;
         this->relativePos = relativePos;
@@ -26,12 +27,39 @@ class UIElement
     }
 
 
+    ~UIElement()
+    {
+        if ( !children.empty() )
+            for ( UIElement* child : children )
+                delete child;
+    }
+
+
+    public: void AddChild( UIElement* newChild )
+    {
+        // newChild->parent = this;
+        children.push_back( newChild );
+    }
+
+
+    public: void RemoveAndDeleteChild( int childNumber )
+    {
+        if ( childNumber >= children.size() )
+        {
+            std::cerr << "Tried to remove a UI child that doesn't exist! child id: " << childNumber << "\n";
+            return;
+        }
+        delete children[childNumber];
+        children.erase( children.begin() + childNumber );
+    }
+
+
     public: void UpdateSelfAndChildren()
     {
         UpdateRect();
         if ( !children.empty() )
-            for ( UIElement& child : children )
-                child.UpdateSelfAndChildren();
+            for ( UIElement* child : children )
+                child->UpdateSelfAndChildren();
     }
 
 
@@ -39,20 +67,20 @@ class UIElement
     {
         RenderSelf( renderer );
         if ( !children.empty() )
-            for ( UIElement& child : children )
-                child.RenderSelfAndChildren( renderer );
+            for ( UIElement* child : children )
+                child->RenderSelfAndChildren( renderer );
     }
 
 
-    public: virtual bool GetWasClicked( const SDL_Point& clickPos ) const
+    public: virtual bool GetWasClicked( const SDL_FPoint& clickPos ) const
     {
         // Override in children classes
         if ( children.empty() )
             return false;
         
-        for ( const UIElement& child : children )
+        for ( const UIElement* child : children )
         {
-            if ( child.GetWasClicked( clickPos ) )
+            if ( child->GetWasClicked( clickPos ) )
                 return true;
         }
         return false;
@@ -61,10 +89,10 @@ class UIElement
 
     private: void UpdateRect()
     {
-        SDL_Point realPos = GetRealPos();
+        SDL_FPoint realPos = GetRealPos();
         rect.x = realPos.x;
         rect.y = realPos.y;
-        SDL_Point realSize = GetRealSize();
+        SDL_FPoint realSize = GetRealSize();
         rect.w = realSize.x;
         rect.h = realSize.y;
         isRectDirty = false;
@@ -77,9 +105,20 @@ class UIElement
     }
 
 
-    private: SDL_Point GetRealPos() const
+    public: inline bool GetIsPosInRect( SDL_FPoint pos ) const
     {
-        SDL_Point realPos = relativePos;
+        return (
+            pos.x >= rect.x
+            && pos.y >= rect.y
+            && pos.x < rect.x + rect.w
+            && pos.y < rect.y + rect.h
+        );
+    }
+
+
+    private: SDL_FPoint GetRealPos() const
+    {
+        SDL_FPoint realPos = relativePos;
         if ( !isRectDirty || parent == nullptr )
         {
             realPos.x = rect.x;
@@ -142,9 +181,9 @@ class UIElement
     }
 
 
-    private: SDL_Point GetRealSize() const
+    private: SDL_FPoint GetRealSize() const
     {
-        SDL_Point realSize = size;
+        SDL_FPoint realSize = size;
         if ( !isRectDirty || parent == nullptr )
         {
             realSize.x = rect.w;

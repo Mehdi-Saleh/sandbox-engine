@@ -5,6 +5,8 @@
 #include <iostream>
 #include <string>
 #include "elements_data.cpp"
+#include "ui_element.cpp"
+#include "ui_rect.cpp"
 
 
 class UIRenderer
@@ -19,6 +21,8 @@ class UIRenderer
     private: int mouseMarkerRadius = 10;
     private: SDL_Color mouseMarkerColor { 255, 255, 255, 255 };
 
+    private: UIElement* uiRoot = nullptr;
+
 
     public: UIRenderer( int width, int height, float partileSize, ElementsData* elementsData )
     {
@@ -31,18 +35,33 @@ class UIRenderer
 
     ~UIRenderer()
     {
-        
+        delete uiRoot;
     }
 
 
     public: void Init()
     {
+        uiRoot = new UIElement( 
+            UI_ANCHOR_MODE_DEFAULT,
+            SDL_FPoint{ 0, 0 }, 
+            SDL_FPoint{ float( windowWidth ), float( windowHeight ) } 
+            );
+
+        UIRect* testRect = new UIRect( 
+            UI_ANCHOR_MODE_DEFAULT,
+            SDL_FPoint{ 0, 0 }, 
+            SDL_FPoint{ 100, 100 },
+            SDL_Color{ 255, 255, 100, 255 }
+            );
+        uiRoot->AddChild( testRect );
         
+        uiRoot->UpdateSelfAndChildren();
     }
 
 
     public: void Render( SDL_Renderer* sdlRenderer )
     {
+        uiRoot->RenderSelfAndChildren( sdlRenderer );
         SDL_SetRenderDrawColor( sdlRenderer, mouseMarkerColor.r, mouseMarkerColor.g, mouseMarkerColor.b , mouseMarkerColor.a );
         DrawCircle( sdlRenderer, mousePos.x, mousePos.y, mouseMarkerRadius );
     }
