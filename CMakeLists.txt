@@ -19,6 +19,9 @@ add_executable(
 		particle_dirs.cpp
 		input_handler.cpp
 		drawing_utility.cpp
+		ui_anchor_modes.cpp
+		ui_element.cpp
+		ui_rect.cpp
 		)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3)

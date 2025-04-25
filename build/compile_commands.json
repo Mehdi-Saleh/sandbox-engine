@@ -64,5 +64,23 @@
   "command": "/usr/bin/g++ -g -std=gnu++17 -o CMakeFiles/SandboxEngine.dir/drawing_utility.cpp.o -c \"/home/mehdi/My Projects/sandbox-engine/drawing_utility.cpp\"",
   "file": "/home/mehdi/My Projects/sandbox-engine/drawing_utility.cpp",
   "output": "CMakeFiles/SandboxEngine.dir/drawing_utility.cpp.o"
+},
+{
+  "directory": "/home/mehdi/My Projects/sandbox-engine/build",
+  "command": "/usr/bin/g++ -g -std=gnu++17 -o CMakeFiles/SandboxEngine.dir/ui_anchor_modes.cpp.o -c \"/home/mehdi/My Projects/sandbox-engine/ui_anchor_modes.cpp\"",
+  "file": "/home/mehdi/My Projects/sandbox-engine/ui_anchor_modes.cpp",
+  "output": "CMakeFiles/SandboxEngine.dir/ui_anchor_modes.cpp.o"
+},
+{
+  "directory": "/home/mehdi/My Projects/sandbox-engine/build",
+  "command": "/usr/bin/g++ -g -std=gnu++17 -o CMakeFiles/SandboxEngine.dir/ui_element.cpp.o -c \"/home/mehdi/My Projects/sandbox-engine/ui_element.cpp\"",
+  "file": "/home/mehdi/My Projects/sandbox-engine/ui_element.cpp",
+  "output": "CMakeFiles/SandboxEngine.dir/ui_element.cpp.o"
+},
+{
+  "directory": "/home/mehdi/My Projects/sandbox-engine/build",
+  "command": "/usr/bin/g++ -g -std=gnu++17 -o CMakeFiles/SandboxEngine.dir/ui_rect.cpp.o -c \"/home/mehdi/My Projects/sandbox-engine/ui_rect.cpp\"",
+  "file": "/home/mehdi/My Projects/sandbox-engine/ui_rect.cpp",
+  "output": "CMakeFiles/SandboxEngine.dir/ui_rect.cpp.o"
 }
 ]
