@@ -22,6 +22,7 @@ add_executable(
 		ui_anchor_modes.cpp
 		ui_element.cpp
 		ui_rect.cpp
+		ui_label.cpp
 		)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3)

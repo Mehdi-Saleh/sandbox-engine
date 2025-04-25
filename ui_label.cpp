@@ -1,17 +1,19 @@
-#ifndef UI_RECT
-#define UI_RECT
+#ifndef UI_LABEL
+#define UI_LABEL
 
 #include <iostream>
+#include <string>
 #include "ui_element.cpp"
 
 
-class UIRect : public UIElement
+class UILabel : public UIElement
 {
+    public: std::string text = "Label";
     public: SDL_Color color { 100, 100, 100, 255 };
     private: bool isHidden = false;
 
 
-    public: UIRect( short anchorMode, SDL_FPoint relativePos, SDL_FPoint size, SDL_Color color ):
+    public: UILabel( short anchorMode, SDL_FPoint relativePos, SDL_FPoint size, SDL_Color color ):
         UIElement( anchorMode, relativePos, size )
     {
         this->color = color;
@@ -39,12 +41,9 @@ class UIRect : public UIElement
     {
         if ( isHidden )
             return;
-            
         if ( isRectDirty )
             UpdateSelfAndChildren();
-        SDL_SetRenderDrawColor( renderer, color.r, color.g, color.b, color.a );
-        SDL_RenderFillRect( renderer, &rect );
-        std::cout << "rendered rect " << rect.h << "," << rect.w << "\n";
+        // TODO render text
     }
 };
 
