@@ -37,6 +37,8 @@ class UIRect : public UIElement
 
     protected: void RenderSelf( SDL_Renderer* renderer ) override
     {
+        if ( isRectDirty )
+            UpdateSelfAndChildren();
         SDL_SetRenderDrawColor( renderer, color.r, color.g, color.b, color.a );
         SDL_RenderFillRect( renderer, &rect );
         std::cout << "rendered rect " << rect.h << "," << rect.w << "\n";

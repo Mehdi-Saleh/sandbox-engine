@@ -48,20 +48,21 @@ class UIRenderer
             );
 
         UIRect* testRect = new UIRect( 
-            UI_ANCHOR_MODE_DEFAULT,
+            UI_ANCHOR_MODE_TOP_RIGHT,
             SDL_FPoint{ 0, 0 }, 
-            SDL_FPoint{ 100, 100 },
+            SDL_FPoint{ 100, 40 },
             SDL_Color{ 255, 255, 100, 255 }
             );
+        testRect->SetPivot( 1.0, 0.0 );
         uiRoot->AddChild( testRect );
-        // TODO what about the parent??!!!
 
-        // UIElement* testRect = new UIElement( 
-        //     UI_ANCHOR_MODE_DEFAULT,
-        //     SDL_FPoint{ 0, 0 }, 
-        //     SDL_FPoint{ 100, 100 }
-        //     );
-        // uiRoot->AddChild( testRect );
+        UIRect* testRect2 = new UIRect( 
+            UI_ANCHOR_MODE_CENTER,
+            SDL_FPoint{ 0, 0 }, 
+            SDL_FPoint{ 20, 20 },
+            SDL_Color{ 100, 100, 20, 255 }
+            );
+        testRect->AddChild( testRect2 );
         
         uiRoot->UpdateSelfAndChildren();
     }

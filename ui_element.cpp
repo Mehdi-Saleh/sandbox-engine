@@ -9,7 +9,7 @@
 class UIElement
 {
     private: short anchorMode = 0;
-    private: SDL_FPoint pivot { 0, 0 };
+    private: SDL_FPoint pivot { 0.5, 0.5 };
     private: SDL_FPoint relativePos { 0, 0 };
     private: SDL_FPoint size { 10, 10 };
     protected: SDL_FRect rect;
@@ -37,7 +37,8 @@ class UIElement
 
     public: void AddChild( UIElement* newChild )
     {
-        // newChild->parent = this;
+        newChild->parent = this;
+        newChild->isRectDirty = true;
         children.push_back( newChild );
     }
 
@@ -102,6 +103,8 @@ class UIElement
     protected: virtual void RenderSelf( SDL_Renderer* renderer )
     {
         // Override in children classes
+        if ( isRectDirty )
+            UpdateSelfAndChildren();
     }
 
 
@@ -116,19 +119,47 @@ class UIElement
     }
 
 
+    public: void SetPivot( float pivotX, float pivotY )
+    {
+        pivot.x = pivotX;
+        pivot.y = pivotY;
+        isRectDirty = true;
+    }
+
+
     private: SDL_FPoint GetRealPos() const
     {
         SDL_FPoint realPos = relativePos;
-        if ( !isRectDirty || parent == nullptr )
+        if ( !isRectDirty )
         {
             realPos.x = rect.x;
             realPos.y = rect.y;
             return realPos;
         }
 
-        realPos.x -= size.x * pivot.x;
-        realPos.y -= size.y * pivot.y;
+        else if ( parent == nullptr )
+        {
+            realPos.x = relativePos.x;
+            realPos.y = relativePos.y;
+            return realPos;
+        }
 
+        if ( !(
+            anchorMode == UI_ANCHOR_MODE_FILL
+            || anchorMode == UI_ANCHOR_MODE_TOP_FILL
+            || anchorMode == UI_ANCHOR_MODE_LEFT_FILL
+            || anchorMode == UI_ANCHOR_MODE_RIGHT_FILL
+            || anchorMode == UI_ANCHOR_MODE_BUTTOM_FILL
+        )
+        )
+        {
+            realPos.x -= size.x * pivot.x;
+            realPos.y -= size.y * pivot.y;
+        }
+
+        SDL_FRect parentRect = parent->rect;
+        realPos.x += parentRect.x;
+        realPos.y += parentRect.y;
         switch ( anchorMode )
         {
             case UI_ANCHOR_MODE_TOP_LEFT:
@@ -136,48 +167,45 @@ class UIElement
             case UI_ANCHOR_MODE_FILL:
                 break;
             case UI_ANCHOR_MODE_TOP:
-                realPos.x -= parent->rect.w * 0.5;
+                realPos.x += parentRect.w * 0.5;
                 break;
             case UI_ANCHOR_MODE_TOP_FILL:
-                realPos.x -= parent->rect.w * 0.5;
                 break;
             case UI_ANCHOR_MODE_TOP_RIGHT:
-                realPos.x -= parent->rect.w;
+                realPos.x += parentRect.w;
                 break;
             case UI_ANCHOR_MODE_RIGHT:
-                realPos.x -= parent->rect.w;
-                realPos.y -= parent->rect.h * 0.5;
+                realPos.x += parentRect.w;
+                realPos.y += parentRect.h * 0.5;
                 break;
             case UI_ANCHOR_MODE_RIGHT_FILL:
-                realPos.x -= parent->rect.w;
-                realPos.y -= parent->rect.h * 0.5;
+                realPos.x += parentRect.w - size.x;
                 break;
             case UI_ANCHOR_MODE_BUTTOM_RIGHT:
-                realPos.x -= parent->rect.w;
-                realPos.y -= parent->rect.h;
+                realPos.x += parentRect.w;
+                realPos.y += parentRect.h;
                 break;
             case UI_ANCHOR_MODE_BUTTOM:
-                realPos.x -= parent->rect.w * 0.5;
-                realPos.y -= parent->rect.h;
+                realPos.x += parentRect.w * 0.5;
+                realPos.y += parentRect.h;
                 break;
             case UI_ANCHOR_MODE_BUTTOM_FILL:
-                realPos.x -= parent->rect.w * 0.5;
-                realPos.y -= parent->rect.h;
+                realPos.y += parentRect.h - size.y;
                 break;
             case UI_ANCHOR_MODE_BUTTOM_LEFT:
-                realPos.y -= parent->rect.w;
+                realPos.y += parentRect.h;
                 break;
             case UI_ANCHOR_MODE_LEFT:
-                realPos.y -= parent->rect.w * 0.5;
+                realPos.y += parentRect.h * 0.5;
                 break;
             case UI_ANCHOR_MODE_LEFT_FILL:
-                realPos.y -= parent->rect.w * 0.5;
                 break;
             case UI_ANCHOR_MODE_CENTER:
-                realPos.x -= parent->rect.w * 0.5;
-                realPos.y -= parent->rect.h * 0.5;
+                realPos.x += parentRect.w * 0.5;
+                realPos.y += parentRect.h * 0.5;
                 break;
         }
+        return realPos;
     }
 
 
@@ -197,18 +225,19 @@ class UIElement
             return realSize;
         }
 
+        SDL_FRect parentRect = parent->rect;
         if ( 
             anchorMode == UI_ANCHOR_MODE_FILL 
             || anchorMode == UI_ANCHOR_MODE_TOP_FILL 
             || anchorMode == UI_ANCHOR_MODE_BUTTOM_FILL 
             )
-            realSize.x = parent->rect.w;
+            realSize.x = parentRect.w;
         if ( 
             anchorMode == UI_ANCHOR_MODE_FILL 
             || anchorMode == UI_ANCHOR_MODE_LEFT_FILL 
             || anchorMode == UI_ANCHOR_MODE_RIGHT_FILL 
             )
-            realSize.y = parent->rect.h;
+            realSize.y = parentRect.h;
         
         return realSize;
     }
