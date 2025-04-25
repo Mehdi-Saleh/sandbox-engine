@@ -1154,6 +1154,18 @@
 			"value" : "/usr/local/lib64/cmake/SDL3"
 		},
 		{
+			"name" : "SDL3_ttf_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for SDL3_ttf."
+				}
+			],
+			"type" : "PATH",
+			"value" : "/usr/local/lib64/cmake/SDL3_ttf"
+		},
+		{
 			"name" : "SandboxEngine_BINARY_DIR",
 			"properties" : 
 			[

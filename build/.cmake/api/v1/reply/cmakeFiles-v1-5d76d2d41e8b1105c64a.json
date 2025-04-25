@@ -158,6 +158,27 @@
 		{
 			"isExternal" : true,
 			"path" : "/usr/local/lib64/cmake/SDL3/SDL3testTargets-relwithdebinfo.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/usr/local/lib64/cmake/SDL3_ttf/SDL3_ttfConfigVersion.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/usr/local/lib64/cmake/SDL3_ttf/SDL3_ttfConfig.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/usr/share/cmake/Modules/FeatureSummary.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/usr/local/lib64/cmake/SDL3_ttf/SDL3_ttf-shared-targets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/usr/local/lib64/cmake/SDL3_ttf/SDL3_ttf-shared-targets-relwithdebinfo.cmake"
 		}
 	],
 	"kind" : "cmakeFiles",

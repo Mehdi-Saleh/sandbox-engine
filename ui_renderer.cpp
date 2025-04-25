@@ -2,11 +2,18 @@
 #define UI_RENDERER
 
 #include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <iostream>
 #include <string>
 #include "elements_data.cpp"
 #include "ui_element.cpp"
 #include "ui_rect.cpp"
+#include "ui_label.cpp"
+
+
+#define SMALL_FONT_SIZE 12
+#define MEDIUM_FONT_SIZE 16
+#define BIG_FONT_SIZE 20
 
 
 class UIRenderer
@@ -22,6 +29,11 @@ class UIRenderer
     private: SDL_Color mouseMarkerColor { 255, 255, 255, 255 };
 
     private: UIElement* uiRoot = nullptr;
+    private: UILabel* fpsIndicator = nullptr;
+
+    private: TTF_Font* fontSmall = nullptr;
+    private: TTF_Font* fontMedium = nullptr;
+    private: TTF_Font* fontBig = nullptr;
 
 
     public: UIRenderer( int width, int height, float partileSize, ElementsData* elementsData )
@@ -36,35 +48,38 @@ class UIRenderer
     ~UIRenderer()
     {
         delete uiRoot;
+        DestroySDL_TTF();
     }
 
 
     public: void Init()
     {
-        uiRoot = new UIElement( 
-            UI_ANCHOR_MODE_DEFAULT,
-            SDL_FPoint{ 0, 0 }, 
-            SDL_FPoint{ float( windowWidth ), float( windowHeight ) } 
-            );
-
-        UIRect* testRect = new UIRect( 
-            UI_ANCHOR_MODE_TOP_RIGHT,
-            SDL_FPoint{ 0, 0 }, 
-            SDL_FPoint{ 100, 40 },
-            SDL_Color{ 255, 255, 100, 255 }
-            );
-        testRect->SetPivot( 1.0, 0.0 );
-        uiRoot->AddChild( testRect );
-
-        UIRect* testRect2 = new UIRect( 
-            UI_ANCHOR_MODE_CENTER,
-            SDL_FPoint{ 0, 0 }, 
-            SDL_FPoint{ 20, 20 },
-            SDL_Color{ 100, 100, 20, 255 }
-            );
-        testRect->AddChild( testRect2 );
-        
+        InitSDL_TTF();
+        CreateUI();
         uiRoot->UpdateSelfAndChildren();
+    }
+
+
+    private: void InitSDL_TTF()
+    {
+        TTF_Init();
+
+        fontSmall = TTF_OpenFont( "PixelEmulator-xq08.ttf", SMALL_FONT_SIZE );
+        fontMedium = TTF_OpenFont( "PixelEmulator-xq08.ttf", MEDIUM_FONT_SIZE );
+        fontBig = TTF_OpenFont( "PixelEmulator-xq08.ttf", BIG_FONT_SIZE );
+        if ( !( fontSmall && fontMedium && fontBig ) ) 
+        {
+            std::cerr << "Failed to load font: " << SDL_GetError() << std::endl;
+        }
+    }
+
+
+    private: void DestroySDL_TTF()
+    {
+        TTF_CloseFont( fontSmall );
+        TTF_CloseFont( fontMedium );
+        TTF_CloseFont( fontBig );
+        TTF_Quit();
     }
 
 
@@ -126,6 +141,44 @@ class UIRenderer
         }
 
         return status;
+    }
+
+
+    public: void SetFPSText( int fps )
+    {
+        std::string newText = "fps ";
+        newText.append( std::to_string( fps ) );
+        fpsIndicator->SetText( newText );
+    }
+
+
+    private: void CreateUI()
+    {
+        uiRoot = new UIElement( 
+            UI_ANCHOR_MODE_DEFAULT,
+            SDL_FPoint{ 0, 0 }, 
+            SDL_FPoint{ float( windowWidth ), float( windowHeight ) } 
+            );
+
+        UIElement* fpsIndicatorFrame = new UIElement( 
+            UI_ANCHOR_MODE_TOP_RIGHT,
+            SDL_FPoint{ 0, 0 }, 
+            SDL_FPoint{ 80, 20 }
+            );
+        fpsIndicatorFrame->SetPivot( 1.0, 0.0 );
+        uiRoot->AddChild( fpsIndicatorFrame );
+
+        fpsIndicator = new UILabel( 
+            UI_ANCHOR_MODE_CENTER,
+            SDL_FPoint{ 0, 0 }, 
+            SDL_FPoint{ 60, 20 },
+            SDL_Color{ 100, 100, 20, 255 },
+            fontSmall
+            );
+        SDL_Color fpsColor = SDL_Color { 200, 200, 200, 255 };
+        fpsIndicator->SetColor( fpsColor );
+        fpsIndicator->SetText( "fps 999" );
+        fpsIndicatorFrame->AddChild( fpsIndicator );
     }
 };
 

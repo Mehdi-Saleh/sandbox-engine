@@ -102,6 +102,7 @@ class Sandbox
     {
         renderer.SetMousePos( mouseScreenPos );
         renderer.SetMouseMarkerRadius( drawingUtility.brushSize );
+        renderer.SetFPSText( mouseScreenPos.x );
         renderer.Render();
     }
 };

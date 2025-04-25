@@ -120,6 +120,12 @@ class Renderer
     }
 
 
+    public: void SetFPSText( int fps )
+    {
+        uiRenderer->SetFPSText( fps );
+    }
+
+
     public: SDL_FPoint GetBoardToScreenSpace( int boardX, int boardY )
     {
         SDL_FPoint point = SDL_FPoint();
