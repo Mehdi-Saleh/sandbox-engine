@@ -88,5 +88,11 @@
   "command": "/usr/bin/g++ -g -std=gnu++17 -o CMakeFiles/SandboxEngine.dir/ui_label.cpp.o -c \"/home/mehdi/My Projects/sandbox-engine/ui_label.cpp\"",
   "file": "/home/mehdi/My Projects/sandbox-engine/ui_label.cpp",
   "output": "CMakeFiles/SandboxEngine.dir/ui_label.cpp.o"
+},
+{
+  "directory": "/home/mehdi/My Projects/sandbox-engine/build",
+  "command": "/usr/bin/g++ -g -std=gnu++17 -o CMakeFiles/SandboxEngine.dir/fps_manager.cpp.o -c \"/home/mehdi/My Projects/sandbox-engine/fps_manager.cpp\"",
+  "file": "/home/mehdi/My Projects/sandbox-engine/fps_manager.cpp",
+  "output": "CMakeFiles/SandboxEngine.dir/fps_manager.cpp.o"
 }
 ]

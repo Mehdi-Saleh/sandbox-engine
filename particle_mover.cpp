@@ -63,21 +63,24 @@ class ParticleMover
 
     public: bool ApplyLiquidMovement( int x, int y )
     {
-        bool moved = ApplyLiquidMovementNoLeftAndRight( x, y );
+        bool moved = ApplyLiquidMovementNoLeftAndRightMixing( x, y );
         if ( moved )
             return true;
 
-        return ApplyLiquidMovementOnlyLeftAndRight( x, y );
+        return ApplyLiquidMovementOnlyLeftAndRightMixing( x, y );
     }
 
 
-    public: bool ApplyLiquidMovementNoLeftAndRight( int x, int y )
+    public: bool ApplyLiquidMovementNoLeftAndRightMixing( int x, int y )
     {
-        return ApplyPowderMovement( x, y );
+        bool moved = ApplyPowderMovement( x, y );
+        if ( moved )
+            return true;
+        return ApplyLiquidMovementOnlyLeftAndRightNoMixing( x, y );
     }
 
 
-    public: bool ApplyLiquidMovementOnlyLeftAndRight( int x, int y )
+    private: bool ApplyLiquidMovementOnlyLeftAndRightNoMixing( int x, int y )
     {
         bool isRightFirst = lastParticleDirs[x][y] < PARTICLE_DIR_DOWN;
 
@@ -115,6 +118,19 @@ class ParticleMover
                 return true;
             }
         }
+        
+        return false;
+    }
+
+
+    public: bool ApplyLiquidMovementOnlyLeftAndRightMixing( int x, int y )
+    {
+        bool isRightFirst = lastParticleDirs[x][y] < PARTICLE_DIR_DOWN;
+
+        int rightX, rightY;
+        int leftX, leftY;
+        GetRight( x, y, rightX, rightY );
+        GetLeft( x, y, leftX, leftY );
 
         if ( isRightFirst )
         {
@@ -152,15 +168,15 @@ class ParticleMover
 
     public: bool ApplyGasMovement( int x, int y )
     {
-        bool moved = ApplyGasMovementNoLeftAndRight( x, y );
+        bool moved = ApplyGasMovementNoLeftAndRightMixing( x, y );
         if ( moved )
             return true;
 
-        return ApplyGasMovementOnlyLeftAndRight( x, y );
+        return ApplyGasMovementOnlyLeftAndRightMixing( x, y );
     }
 
 
-    public: bool ApplyGasMovementNoLeftAndRight( int x, int y )
+    public: bool ApplyGasMovementNoLeftAndRightMixing( int x, int y )
     {
         int otherX, otherY;
         GetUp( x, y, otherX, otherY );
@@ -189,12 +205,47 @@ class ParticleMover
             lastParticleDirs[otherX][otherY] = PARTICLE_DIR_DOWN_LEFT;
             return true;
         }
+
+        bool isRightFirst = lastParticleDirs[x][y] < PARTICLE_DIR_DOWN;
+        int rightX, rightY;
+        int leftX, leftY;
+        GetRight( x, y, rightX, rightY );
+        GetLeft( x, y, leftX, leftY );
+        if ( isRightFirst )
+        {
+            if ( GetIsEmpty( rightX, rightY ) && !GetHasAlreadyMoved( rightX, rightY ) )
+            {
+                Swap( x, y, rightX, rightY );
+                lastParticleDirs[x][y] = PARTICLE_DIR_LEFT;
+                lastParticleDirs[rightX][rightY] = PARTICLE_DIR_RIGHT;
+                return true;
+            }
+        }
+
+        if ( GetIsEmpty( leftX, leftY ) && !GetHasAlreadyMoved( leftX, leftY ) )
+        {
+            Swap( x, y, leftX, leftY );
+            lastParticleDirs[x][y] = PARTICLE_DIR_RIGHT;
+            lastParticleDirs[leftX][leftY] = PARTICLE_DIR_LEFT;
+            return true;
+        }
+
+        if ( !isRightFirst )
+        {
+            if ( GetIsEmpty( rightX, rightY ) && !GetHasAlreadyMoved( rightX, rightY ) )
+            {
+                Swap( x, y, rightX, rightY );
+                lastParticleDirs[x][y] = PARTICLE_DIR_LEFT;
+                lastParticleDirs[rightX][rightY] = PARTICLE_DIR_RIGHT;
+                return true;
+            }
+        }
         
         return false;
     }
 
 
-    public: bool ApplyGasMovementOnlyLeftAndRight( int x, int y )
+    public: bool ApplyGasMovementOnlyLeftAndRightMixing( int x, int y )
     {
         bool isRightFirst = lastParticleDirs[x][y] < PARTICLE_DIR_DOWN;
 

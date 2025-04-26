@@ -139,6 +139,12 @@ build CMakeFiles/SandboxEngine.dir/ui_label.cpp.o: CXX_COMPILER__SandboxEngine_u
   OBJECT_DIR = CMakeFiles/SandboxEngine.dir
   OBJECT_FILE_DIR = CMakeFiles/SandboxEngine.dir
 
+build CMakeFiles/SandboxEngine.dir/fps_manager.cpp.o: CXX_COMPILER__SandboxEngine_unscanned_Debug /home/mehdi/My$ Projects/sandbox-engine/fps_manager.cpp || cmake_object_order_depends_target_SandboxEngine
+  DEP_FILE = CMakeFiles/SandboxEngine.dir/fps_manager.cpp.o.d
+  FLAGS = -g -std=gnu++17
+  OBJECT_DIR = CMakeFiles/SandboxEngine.dir
+  OBJECT_FILE_DIR = CMakeFiles/SandboxEngine.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target SandboxEngine
@@ -147,7 +153,7 @@ build CMakeFiles/SandboxEngine.dir/ui_label.cpp.o: CXX_COMPILER__SandboxEngine_u
 #############################################
 # Link the executable SandboxEngine
 
-build SandboxEngine: CXX_EXECUTABLE_LINKER__SandboxEngine_Debug CMakeFiles/SandboxEngine.dir/main.cpp.o CMakeFiles/SandboxEngine.dir/sandbox.cpp.o CMakeFiles/SandboxEngine.dir/renderer.cpp.o CMakeFiles/SandboxEngine.dir/board_renderer.cpp.o CMakeFiles/SandboxEngine.dir/ui_renderer.cpp.o CMakeFiles/SandboxEngine.dir/elements_data.cpp.o CMakeFiles/SandboxEngine.dir/particles_manager.cpp.o CMakeFiles/SandboxEngine.dir/particle_mover.cpp.o CMakeFiles/SandboxEngine.dir/particle_dirs.cpp.o CMakeFiles/SandboxEngine.dir/input_handler.cpp.o CMakeFiles/SandboxEngine.dir/drawing_utility.cpp.o CMakeFiles/SandboxEngine.dir/ui_anchor_modes.cpp.o CMakeFiles/SandboxEngine.dir/ui_element.cpp.o CMakeFiles/SandboxEngine.dir/ui_rect.cpp.o CMakeFiles/SandboxEngine.dir/ui_label.cpp.o | /usr/local/lib64/libSDL3_ttf.so.0.2.2 /usr/local/lib64/libSDL3.so.0.3.0
+build SandboxEngine: CXX_EXECUTABLE_LINKER__SandboxEngine_Debug CMakeFiles/SandboxEngine.dir/main.cpp.o CMakeFiles/SandboxEngine.dir/sandbox.cpp.o CMakeFiles/SandboxEngine.dir/renderer.cpp.o CMakeFiles/SandboxEngine.dir/board_renderer.cpp.o CMakeFiles/SandboxEngine.dir/ui_renderer.cpp.o CMakeFiles/SandboxEngine.dir/elements_data.cpp.o CMakeFiles/SandboxEngine.dir/particles_manager.cpp.o CMakeFiles/SandboxEngine.dir/particle_mover.cpp.o CMakeFiles/SandboxEngine.dir/particle_dirs.cpp.o CMakeFiles/SandboxEngine.dir/input_handler.cpp.o CMakeFiles/SandboxEngine.dir/drawing_utility.cpp.o CMakeFiles/SandboxEngine.dir/ui_anchor_modes.cpp.o CMakeFiles/SandboxEngine.dir/ui_element.cpp.o CMakeFiles/SandboxEngine.dir/ui_rect.cpp.o CMakeFiles/SandboxEngine.dir/ui_label.cpp.o CMakeFiles/SandboxEngine.dir/fps_manager.cpp.o | /usr/local/lib64/libSDL3_ttf.so.0.2.2 /usr/local/lib64/libSDL3.so.0.3.0
   FLAGS = -g
   LINK_LIBRARIES = -Wl,-rpath,/usr/local/lib64  /usr/local/lib64/libSDL3_ttf.so.0.2.2  /usr/local/lib64/libSDL3.so.0.3.0
   OBJECT_DIR = CMakeFiles/SandboxEngine.dir

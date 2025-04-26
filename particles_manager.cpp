@@ -228,9 +228,9 @@ class ParticlesManager
         if ( particleData->state == PARTICLE_STATE_POWDER )
             particleMover.ApplyPowderMovement( x, y );
         else if (  particleData->state == PARTICLE_STATE_LIQUID )
-            particleMover.ApplyLiquidMovementNoLeftAndRight( x, y );
+            particleMover.ApplyLiquidMovementNoLeftAndRightMixing( x, y );
         else if (  particleData->state == PARTICLE_STATE_GAS )
-            particleMover.ApplyGasMovementNoLeftAndRight( x, y );
+            particleMover.ApplyGasMovementNoLeftAndRightMixing( x, y );
     }
 
 
@@ -238,9 +238,9 @@ class ParticlesManager
     {
         ElementParticleData* particleData = elementsData->GetParticleData( board[x][y] );
         if (  particleData->state == PARTICLE_STATE_LIQUID )
-            particleMover.ApplyLiquidMovementOnlyLeftAndRight( x, y );
+            particleMover.ApplyLiquidMovementOnlyLeftAndRightMixing( x, y );
         else if (  particleData->state == PARTICLE_STATE_GAS )
-            particleMover.ApplyGasMovementOnlyLeftAndRight( x, y );
+            particleMover.ApplyGasMovementOnlyLeftAndRightMixing( x, y );
     }
 };
 
