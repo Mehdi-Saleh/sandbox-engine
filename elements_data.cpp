@@ -156,6 +156,12 @@ class ElementsData
         }
         return &elementsRenderingData[id];
     }
+
+
+    public: int GetElementsCount() const
+    {
+        return elementsCount;
+    }
 };
 
 #endif

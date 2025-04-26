@@ -8,17 +8,18 @@
 #include "input_handler.cpp"
 #include "drawing_utility.cpp"
 #include "elements_data.cpp"
+#include "fps_manager.cpp"
 
 
 #define WINDOW_NAME "Sandbox Engine"
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEGHT 720
 #define PARTICLE_SIZE 5.0
-#define UPDATE_INTERVAL_IN_MILLISECONDS 20
 
 
 class Sandbox
 {
+    FPSManager fpsManager = FPSManager();
     ElementsData elementsData = ElementsData();
     ParticlesManager particlesManager = ParticlesManager( WINDOW_WIDTH/PARTICLE_SIZE, WINDOW_HEGHT/PARTICLE_SIZE, &elementsData );
     Renderer renderer = Renderer( std::string( WINDOW_NAME ), WINDOW_WIDTH, WINDOW_HEGHT, PARTICLE_SIZE, particlesManager.GetBoard(), &elementsData );
@@ -26,7 +27,6 @@ class Sandbox
     DrawingUtility drawingUtility = DrawingUtility( &particlesManager );
 
     SDL_Event event;
-    Uint64 timePassedSinceUpdateInMilliseconds = 0;
     bool running = true;
     SDL_FPoint mouseScreenPos;
     SDL_FPoint mouseBoardPos;
@@ -38,9 +38,12 @@ class Sandbox
 
         while ( running ) 
         {
+            fpsManager.Update();
             HandleInput();
-            HandleUpdate();
-            Render();
+            if ( fpsManager.shouldUpdateSimulation )
+                UpdateSimulation();
+            if ( fpsManager.shouldRender )
+                Render();
         }
     }
 
@@ -80,21 +83,18 @@ class Sandbox
         {
             drawingUtility.DecreaseBrushSize( 1 );
         }
-        else if ( inputHandler.GetIsSelectingElement() != -1 )
+        else
         {
-            drawingUtility.SelectElement( inputHandler.GetIsSelectingElement() );
+            int selectingElement = inputHandler.GetIsSelectingElement();
+            if ( selectingElement != -1 && selectingElement < elementsData.GetElementsCount() )
+                drawingUtility.SelectElement( selectingElement );
         }
     }
 
 
-    private: void HandleUpdate()
+    private: void UpdateSimulation()
     {
-        Uint64 newTimePassed = SDL_GetTicks();
-        if ( newTimePassed - timePassedSinceUpdateInMilliseconds > UPDATE_INTERVAL_IN_MILLISECONDS )
-        {
-            particlesManager.Update();
-            timePassedSinceUpdateInMilliseconds = newTimePassed;
-        }
+        particlesManager.Update();
     }
 
 
@@ -102,7 +102,7 @@ class Sandbox
     {
         renderer.SetMousePos( mouseScreenPos );
         renderer.SetMouseMarkerRadius( drawingUtility.brushSize );
-        renderer.SetFPSText( mouseScreenPos.x );
+        renderer.SetFPSText( fpsManager.GetUpdateFPS() );
         renderer.Render();
     }
 };
