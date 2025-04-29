@@ -12,6 +12,11 @@ class UIButton : public UIRect
     public: float onHoverColorMult = 1.1;
     public: float onClickColorMult = 0.6;
 
+    private: bool wasHoveredLastFrame = false;
+    public: SDL_FunctionPointer onHover;
+    private: bool wasClickedLastFrame = false;
+    public: SDL_FunctionPointer onClick;
+
     public: UIButton( short anchorMode, SDL_FPoint relativePos, SDL_FPoint size, SDL_Color color ):
         UIRect( anchorMode, relativePos, size, color )
     {
@@ -24,14 +29,14 @@ class UIButton : public UIRect
         bool wasHovered = UIRect::CheckWasHovered( mousePos );
         if ( wasHovered )
         {
-            currentColor.r = color.r * onHoverColorMult;
-            currentColor.g = color.g * onHoverColorMult;
-            currentColor.b = color.b * onHoverColorMult;
-            currentColor.a = color.a;
-            // TODO add on hover events
+            SetColorToHoverColor();
+            if ( !wasHoveredLastFrame && onHover != nullptr )
+                onHover();
         }
         else
             currentColor = color;
+        wasHoveredLastFrame = wasHovered;
+        wasClickedLastFrame = false;
         return wasHovered;
     }
 
@@ -41,14 +46,13 @@ class UIButton : public UIRect
         bool wasClicked = UIRect::CheckWasClicked( clickPos );
         if ( wasClicked )
         {
-            currentColor.r = color.r * onClickColorMult;
-            currentColor.g = color.g * onClickColorMult;
-            currentColor.b = color.b * onClickColorMult;
-            currentColor.a = color.a;
-            // TODO add on click events
+            SetColorToClickColor();
+            if ( !wasClickedLastFrame && onClick != nullptr )
+                onClick();
         }
         else
             currentColor = color;
+        wasClickedLastFrame = wasClicked;
         return wasClicked;
     }
 
@@ -62,6 +66,24 @@ class UIButton : public UIRect
             UpdateSelfAndChildren();
         SDL_SetRenderDrawColor( renderer, currentColor.r, currentColor.g, currentColor.b, currentColor.a );
         SDL_RenderFillRect( renderer, &rect );
+    }
+
+
+    private: inline void SetColorToHoverColor()
+    {
+        currentColor.r = color.r * onHoverColorMult;
+        currentColor.g = color.g * onHoverColorMult;
+        currentColor.b = color.b * onHoverColorMult;
+        currentColor.a = color.a;
+    }
+
+
+    private: inline void SetColorToClickColor()
+    {
+        currentColor.r = color.r * onClickColorMult;
+        currentColor.g = color.g * onClickColorMult;
+        currentColor.b = color.b * onClickColorMult;
+        currentColor.a = color.a;
     }
 };
 

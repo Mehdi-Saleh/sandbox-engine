@@ -104,6 +104,8 @@ class UILabel : public UIElement
             SDL_DestroyTexture( texture );
         texture = SDL_CreateTextureFromSurface( renderer, surface );
         SDL_GetTextureSize( texture, &rect.w, &rect.h );
+        size.x = rect.w;
+        size.y = rect.h;
         SDL_DestroySurface( surface );
     }
 };

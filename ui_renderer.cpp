@@ -189,26 +189,6 @@ class UIRenderer
         fpsIndicator->SetColor( fpsColor );
         fpsIndicator->SetText( "fps 999" );
         fpsIndicatorFrame->AddChild( fpsIndicator );
-
-        UIButton* testButton = new UIButton( 
-            UI_ANCHOR_MODE_CENTER,
-            SDL_FPoint{ 0, 0 }, 
-            SDL_FPoint{ 100, 30 },
-            SDL_Color{ 150, 90, 35, 200 }
-            );
-        uiRoot->AddChild( testButton );
-
-        UILabel* testButtonText = new UILabel( 
-            UI_ANCHOR_MODE_CENTER,
-            SDL_FPoint{ 0, 0 }, 
-            SDL_FPoint{ 100, 30 },
-            SDL_Color{ 100, 100, 20, 255 },
-            fontSmall
-            );
-        SDL_Color color = SDL_Color { 200, 200, 200, 255 };
-        testButtonText->SetColor( color );
-        testButtonText->SetText( "button!" );
-        testButton->AddChild( testButtonText );
     }
 };
 

@@ -8,10 +8,10 @@
 
 class UIElement
 {
-    private: short anchorMode = 0;
-    private: SDL_FPoint pivot { 0.5, 0.5 };
-    private: SDL_FPoint relativePos { 0, 0 };
-    private: SDL_FPoint size { 10, 10 };
+    protected: short anchorMode = 0;
+    protected: SDL_FPoint pivot { 0.5, 0.5 };
+    protected: SDL_FPoint relativePos { 0, 0 };
+    protected: SDL_FPoint size { 10, 10 };
     protected: SDL_FRect rect;
     protected: bool isRectDirty = true;
 
