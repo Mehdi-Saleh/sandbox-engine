@@ -8,7 +8,7 @@
 class UIRect : public UIElement
 {
     public: SDL_Color color { 100, 100, 100, 255 };
-    private: bool isHidden = false;
+    protected: bool isHidden = false;
 
 
     public: UIRect( short anchorMode, SDL_FPoint relativePos, SDL_FPoint size, SDL_Color color ):
@@ -18,7 +18,24 @@ class UIRect : public UIElement
     }
 
 
-    public: bool GetWasClicked( const SDL_FPoint& clickPos ) const override
+    public: bool CheckWasHovered( SDL_FPoint& mousePos ) override
+    {
+        if ( GetIsPosInRect( mousePos ) )
+            return true;
+
+        if ( children.empty() )
+            return false;
+        
+        for ( UIElement* child : children )
+        {
+            if ( child->CheckWasHovered( mousePos ) )
+                return true;
+        }
+        return false;
+    }
+
+
+    public: bool CheckWasClicked( SDL_FPoint& clickPos ) override
     {
         if ( GetIsPosInRect( clickPos ) )
             return true;
@@ -26,9 +43,9 @@ class UIRect : public UIElement
         if ( children.empty() )
             return false;
         
-        for ( const UIElement* child : children )
+        for ( UIElement* child : children )
         {
-            if ( child->GetWasClicked( clickPos ) )
+            if ( child->CheckWasClicked( clickPos ) )
                 return true;
         }
         return false;

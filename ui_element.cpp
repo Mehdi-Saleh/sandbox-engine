@@ -73,15 +73,30 @@ class UIElement
     }
 
 
-    public: virtual bool GetWasClicked( const SDL_FPoint& clickPos ) const
+    public: virtual bool CheckWasHovered( SDL_FPoint& mousePos )
     {
         // Override in children classes
         if ( children.empty() )
             return false;
         
-        for ( const UIElement* child : children )
+        for ( UIElement* child : children )
         {
-            if ( child->GetWasClicked( clickPos ) )
+            if ( child->CheckWasHovered( mousePos ) )
+                return true;
+        }
+        return false;
+    }
+
+
+    public: virtual bool CheckWasClicked( SDL_FPoint& clickPos )
+    {
+        // Override in children classes
+        if ( children.empty() )
+            return false;
+        
+        for ( UIElement* child : children )
+        {
+            if ( child->CheckWasClicked( clickPos ) )
                 return true;
         }
         return false;

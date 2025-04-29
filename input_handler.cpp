@@ -9,8 +9,8 @@
 class InputHandler
 {
     private: bool isQuiting = false;
-    private: bool isAddingParticle = false;
-    private: bool isErasingParticle = false;
+    private: bool isLeftClicking = false;
+    private: bool isRightClicking = false;
     private: bool isIncreasingBrushSize = false;
     private: bool isDecreasingBrushSize = false;
     private: int isSelectingElement = -1;
@@ -35,16 +35,16 @@ class InputHandler
             else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) 
             {
                 if ( event.button.button == SDL_BUTTON_LEFT )
-                    isAddingParticle = true;
+                    isLeftClicking = true;
                 else if ( event.button.button == SDL_BUTTON_RIGHT )
-                    isErasingParticle = true;
+                    isRightClicking = true;
             }
             else if (event.type == SDL_EVENT_MOUSE_BUTTON_UP) 
             {
                 if ( event.button.button == SDL_BUTTON_LEFT )
-                    isAddingParticle = false;
+                    isLeftClicking = false;
                 else if ( event.button.button == SDL_BUTTON_RIGHT )
-                    isErasingParticle= false;
+                    isRightClicking= false;
             }
             else if ( event.type == SDL_EVENT_MOUSE_WHEEL ) 
             {
@@ -89,15 +89,15 @@ class InputHandler
     }
 
 
-    public: bool GetIsAddingParticle()
+    public: bool GetIsLeftClicking()
     {
-        return isAddingParticle;
+        return isLeftClicking;
     }
 
 
-    public: bool GetIsErasingParticle()
+    public: bool GetIsRightClicking()
     {
-        return isErasingParticle;
+        return isRightClicking;
     }
 
 

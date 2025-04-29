@@ -108,6 +108,12 @@ class Renderer
     }
 
 
+    public: bool HandleMouseInputForUI( SDL_FPoint& mousePos, bool isClicking )
+    {
+        return uiRenderer->HandleMouseInput( mousePos, isClicking );
+    }
+
+
     public: void SetMousePos( SDL_FPoint mouseScreenPos )
     {
         uiRenderer->mousePos = mouseScreenPos;

@@ -9,6 +9,7 @@
 #include "ui_element.cpp"
 #include "ui_rect.cpp"
 #include "ui_label.cpp"
+#include "ui_button.cpp"
 
 
 #define SMALL_FONT_SIZE 12
@@ -88,6 +89,15 @@ class UIRenderer
         uiRoot->RenderSelfAndChildren( sdlRenderer );
         SDL_SetRenderDrawColor( sdlRenderer, mouseMarkerColor.r, mouseMarkerColor.g, mouseMarkerColor.b , mouseMarkerColor.a );
         DrawCircle( sdlRenderer, mousePos.x, mousePos.y, mouseMarkerRadius );
+    }
+
+
+    public: bool HandleMouseInput( SDL_FPoint& mousePos, bool isClicking )
+    {
+        if ( isClicking )
+            return uiRoot->CheckWasClicked( mousePos );
+        else
+            return uiRoot->CheckWasHovered( mousePos );
     }
 
 
@@ -179,6 +189,26 @@ class UIRenderer
         fpsIndicator->SetColor( fpsColor );
         fpsIndicator->SetText( "fps 999" );
         fpsIndicatorFrame->AddChild( fpsIndicator );
+
+        UIButton* testButton = new UIButton( 
+            UI_ANCHOR_MODE_CENTER,
+            SDL_FPoint{ 0, 0 }, 
+            SDL_FPoint{ 100, 30 },
+            SDL_Color{ 150, 90, 35, 200 }
+            );
+        uiRoot->AddChild( testButton );
+
+        UILabel* testButtonText = new UILabel( 
+            UI_ANCHOR_MODE_CENTER,
+            SDL_FPoint{ 0, 0 }, 
+            SDL_FPoint{ 100, 30 },
+            SDL_Color{ 100, 100, 20, 255 },
+            fontSmall
+            );
+        SDL_Color color = SDL_Color { 200, 200, 200, 255 };
+        testButtonText->SetColor( color );
+        testButtonText->SetText( "button!" );
+        testButton->AddChild( testButtonText );
     }
 };
 

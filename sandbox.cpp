@@ -64,14 +64,17 @@ class Sandbox
         inputHandler.HandleInput();
         mouseScreenPos = inputHandler.GetMousePos();
         mouseBoardPos = renderer.GetScreenToBoardSpace( mouseScreenPos.x, mouseScreenPos.y );
+        bool isClicking = inputHandler.GetIsLeftClicking() || inputHandler.GetIsRightClicking();
+
+        bool isMouseOnUI = renderer.HandleMouseInputForUI( mouseScreenPos, isClicking );
 
         if ( inputHandler.GetIsQuiting() )
             running = false;
-        else if ( inputHandler.GetIsAddingParticle() )
+        else if ( inputHandler.GetIsLeftClicking() && !isMouseOnUI )
         {
             drawingUtility.AddParticles( mouseBoardPos.x, mouseBoardPos.y );
         }
-        else if ( inputHandler.GetIsErasingParticle() )
+        else if ( inputHandler.GetIsRightClicking() && !isMouseOnUI )
         {
             drawingUtility.EraseParticles( mouseBoardPos.x, mouseBoardPos.y );
         }

@@ -28,7 +28,8 @@ class UILabel : public UIElement
 
     ~UILabel()
     {
-        SDL_DestroyTexture( texture );
+        if ( texture != nullptr )
+            SDL_DestroyTexture( texture );
     }
 
 
@@ -46,7 +47,24 @@ class UILabel : public UIElement
     }
 
 
-    public: bool GetWasClicked( const SDL_FPoint& clickPos ) const override
+    public: bool CheckWasHovered( SDL_FPoint& mousePos ) override
+    {
+        if ( GetIsPosInRect( mousePos ) )
+            return true;
+
+        if ( children.empty() )
+            return false;
+        
+        for ( UIElement* child : children )
+        {
+            if ( child->CheckWasHovered( mousePos ) )
+                return true;
+        }
+        return false;
+    }
+
+
+    public: bool CheckWasClicked( SDL_FPoint& clickPos ) override
     {
         if ( GetIsPosInRect( clickPos ) )
             return true;
@@ -54,9 +72,9 @@ class UILabel : public UIElement
         if ( children.empty() )
             return false;
         
-        for ( const UIElement* child : children )
+        for ( UIElement* child : children )
         {
-            if ( child->GetWasClicked( clickPos ) )
+            if ( child->CheckWasClicked( clickPos ) )
                 return true;
         }
         return false;
@@ -82,6 +100,8 @@ class UILabel : public UIElement
     private: void UpdateTexture( SDL_Renderer* renderer )
     {
         SDL_Surface* surface = TTF_RenderText_Blended( font, text.c_str(), 0, color );
+        if ( texture != nullptr )
+            SDL_DestroyTexture( texture );
         texture = SDL_CreateTextureFromSurface( renderer, surface );
         SDL_GetTextureSize( texture, &rect.w, &rect.h );
         SDL_DestroySurface( surface );
