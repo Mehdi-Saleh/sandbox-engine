@@ -5,6 +5,7 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <iostream>
 #include <string>
+#include <functional>
 #include "elements_data.cpp"
 #include "ui_element.cpp"
 #include "ui_rect.cpp"
@@ -36,6 +37,8 @@ class UIRenderer
     private: TTF_Font* fontMedium = nullptr;
     private: TTF_Font* fontBig = nullptr;
 
+    private: std::function<void(int)> selectElement;
+
 
     public: UIRenderer( int width, int height, float partileSize, ElementsData* elementsData )
     {
@@ -58,6 +61,27 @@ class UIRenderer
         InitSDL_TTF();
         CreateUI();
         uiRoot->UpdateSelfAndChildren();
+    }
+
+
+    public: void CreateSelectElementButtons( std::function<void(int)> selectElementFunction )
+    {
+        selectElement = selectElementFunction;
+        int count = elementsData->GetElementsCount();
+
+        UIRect* drawer = new UIRect(
+            UI_ANCHOR_MODE_LEFT_FILL,
+            SDL_FPoint { 5, 10 },
+            SDL_FPoint { 120, -20 },
+            SDL_Color { 100, 100, 100, 255 }
+        );
+        uiRoot->AddChild( drawer );
+
+        for ( int i = 0; i < count; i++ )
+        {
+            UIButton* button = CreateSelectElementButton( i );
+            drawer->AddChild( button );
+        }
     }
 
 
@@ -189,15 +213,49 @@ class UIRenderer
         fpsIndicator->SetColor( fpsColor );
         fpsIndicator->SetText( "fps 999" );
         fpsIndicatorFrame->AddChild( fpsIndicator );
+    }
 
-        // UIButton* button = new UIButton(
-        //     UI_ANCHOR_MODE_CENTER,
-        //     SDL_FPoint { 0, 0 },
-        //     SDL_FPoint { 160, 80 },
-        //     SDL_Color { 100, 20, 200, 255 }
-        // );
-        // button->onClick = [](){ std::cout << "Click!\n"; };
-        // uiRoot->AddChild( button );
+
+    private: UIButton* CreateSelectElementButton( int element )
+    {
+
+        const int buttonW = 110;
+        const int buttonH = 40;
+        const int buttonSpacing = 5;
+
+        ElementRenderingData* renderingData = elementsData->GetRenderingData( element );
+        
+        UIButton* button = new UIButton(
+            UI_ANCHOR_MODE_TOP,
+            SDL_FPoint { 0, (float) ( element + 1 ) * ( buttonH + buttonSpacing ) },
+            SDL_FPoint { buttonW, buttonH },
+            renderingData->color
+        );
+        if ( !selectElement )
+            std::cerr << "No select element function was given. Button created with no function!\n";
+        else
+            button->onClick = [this, element](){ selectElement( element ); };
+
+        SDL_Color textColor { 255, 255, 255, 255 };
+        if ( GetIsColorLight( renderingData->color ) )
+            textColor = SDL_Color { 0, 0, 0, 255 };
+        UILabel* buttonText = new UILabel(
+            UI_ANCHOR_MODE_CENTER,
+            SDL_FPoint { 0, 0 },
+            SDL_FPoint { 0, 0 },
+            textColor,
+            fontSmall
+        );
+        buttonText->SetText( renderingData->name );
+        button->AddChild( buttonText );
+        return button;
+    }
+
+
+    private: inline bool GetIsColorLight( SDL_Color& color )
+    {
+        int average = ( color.r + color.g + color.b ) / 3; 
+        return ( average >= 128 );
     }
 };
 

@@ -3,6 +3,7 @@
 
 #include <SDL3/SDL.h>
 #include <iostream>
+#include <functional>
 #include "renderer.cpp"
 #include "particles_manager.cpp"
 #include "input_handler.cpp"
@@ -52,6 +53,7 @@ class Sandbox
     {
         elementsData.LoadDefaultElements();
         int init_exit_code = renderer.Init();
+        renderer.CreateSelectElementButtons( [this](int id){ drawingUtility.SelectElement( id ); } );
         if ( init_exit_code != 0 )
         {
             std::cerr << "Failed to init renderer. exit code: " << init_exit_code << "\n";

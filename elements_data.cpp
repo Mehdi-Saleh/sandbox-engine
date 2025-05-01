@@ -55,8 +55,8 @@ class ElementsData
 
     public: void LoadDefaultElements()
     {
-        elementsParticleData = new ElementParticleData[5];
-        elementsRenderingData = new ElementRenderingData[5];
+        elementsParticleData = new ElementParticleData[6];
+        elementsRenderingData = new ElementRenderingData[6];
         elementsCount = 6;
 
         // Element 0

@@ -20,35 +20,27 @@ class UIRect : public UIElement
 
     public: bool CheckWasHovered( SDL_FPoint& mousePos ) override
     {
-        if ( GetIsPosInRect( mousePos ) )
-            return true;
+        bool wasHovered = GetIsPosInRect( mousePos );
 
-        if ( children.empty() )
-            return false;
-        
-        for ( UIElement* child : children )
-        {
-            if ( child->CheckWasHovered( mousePos ) )
-                return true;
-        }
-        return false;
+        if ( !children.empty() )
+            for ( UIElement* child : children )
+            {
+                wasHovered |= child->CheckWasHovered( mousePos );
+            }
+        return wasHovered;
     }
 
 
     public: bool CheckWasClicked( SDL_FPoint& clickPos ) override
     {
-        if ( GetIsPosInRect( clickPos ) )
-            return true;
+        bool wasClicked = GetIsPosInRect( clickPos );
 
-        if ( children.empty() )
-            return false;
-        
-        for ( UIElement* child : children )
-        {
-            if ( child->CheckWasClicked( clickPos ) )
-                return true;
-        }
-        return false;
+        if ( !children.empty() )
+            for ( UIElement* child : children )
+            {
+                wasClicked |= child->CheckWasClicked( clickPos );
+            }
+        return wasClicked;
     }
 
 

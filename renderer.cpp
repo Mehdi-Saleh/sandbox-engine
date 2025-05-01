@@ -4,6 +4,7 @@
 #include <SDL3/SDL.h>
 #include <iostream>
 #include <string>
+#include <functional>
 #include "elements_data.cpp"
 #include "board_renderer.cpp"
 #include "ui_renderer.cpp"
@@ -149,6 +150,12 @@ class Renderer
         // point.x = 1;
         // point.y = 1;
         return point;
+    }
+
+
+    public: void CreateSelectElementButtons( std::function<void(int)> selectElement )
+    {
+        uiRenderer->CreateSelectElementButtons( selectElement );
     }
 };
 

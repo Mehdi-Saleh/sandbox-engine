@@ -246,13 +246,13 @@ class UIElement
             || anchorMode == UI_ANCHOR_MODE_TOP_FILL 
             || anchorMode == UI_ANCHOR_MODE_BUTTOM_FILL 
             )
-            realSize.x = parentRect.w;
+            realSize.x = parentRect.w + size.x;
         if ( 
             anchorMode == UI_ANCHOR_MODE_FILL 
             || anchorMode == UI_ANCHOR_MODE_LEFT_FILL 
             || anchorMode == UI_ANCHOR_MODE_RIGHT_FILL 
             )
-            realSize.y = parentRect.h;
+            realSize.y = parentRect.h + size.y;
         
         return realSize;
     }
