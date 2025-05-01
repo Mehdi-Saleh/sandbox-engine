@@ -2,6 +2,7 @@
 #define UI_BUTTON
 
 #include <iostream>
+#include <functional>
 #include "ui_element.cpp"
 #include "ui_rect.cpp"
 
@@ -12,10 +13,10 @@ class UIButton : public UIRect
     public: float onHoverColorMult = 1.1;
     public: float onClickColorMult = 0.6;
 
+    public: std::function<void()> onHover;
+    public: std::function<void()> onClick;
     private: bool wasHoveredLastFrame = false;
-    public: SDL_FunctionPointer onHover;
     private: bool wasClickedLastFrame = false;
-    public: SDL_FunctionPointer onClick;
 
     public: UIButton( short anchorMode, SDL_FPoint relativePos, SDL_FPoint size, SDL_Color color ):
         UIRect( anchorMode, relativePos, size, color )
@@ -30,7 +31,7 @@ class UIButton : public UIRect
         if ( wasHovered )
         {
             SetColorToHoverColor();
-            if ( !wasHoveredLastFrame && onHover != nullptr )
+            if ( !wasHoveredLastFrame && onHover )
                 onHover();
         }
         else
@@ -47,7 +48,7 @@ class UIButton : public UIRect
         if ( wasClicked )
         {
             SetColorToClickColor();
-            if ( !wasClickedLastFrame && onClick != nullptr )
+            if ( !wasClickedLastFrame && onClick )
                 onClick();
         }
         else

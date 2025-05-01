@@ -189,6 +189,15 @@ class UIRenderer
         fpsIndicator->SetColor( fpsColor );
         fpsIndicator->SetText( "fps 999" );
         fpsIndicatorFrame->AddChild( fpsIndicator );
+
+        // UIButton* button = new UIButton(
+        //     UI_ANCHOR_MODE_CENTER,
+        //     SDL_FPoint { 0, 0 },
+        //     SDL_FPoint { 160, 80 },
+        //     SDL_Color { 100, 20, 200, 255 }
+        // );
+        // button->onClick = [](){ std::cout << "Click!\n"; };
+        // uiRoot->AddChild( button );
     }
 };
 
