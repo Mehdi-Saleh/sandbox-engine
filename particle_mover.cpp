@@ -356,10 +356,10 @@ class ParticleMover
         else{
                 int aState = GetParticleState( aX, aY );
                 int bState = GetParticleState( bX, bY );
-                return (
-                        GetCanStateAPassThrougStateB( aState, bState )
-                        && ( GetIsADenserThanB( aX, aY, bX, bY ) xor reverseDensity )
-                );
+                bool canPassThough = GetCanStateAPassThrougStateB(aState, bState);
+                bool isDensityPassable = GetIsADenserThanB(aX, aY, bX, bY);
+                if ( reverseDensity ) isDensityPassable = !isDensityPassable;
+                return canPassThough && isDensityPassable;
             }
     }
 
