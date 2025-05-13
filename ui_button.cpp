@@ -73,8 +73,14 @@ class UIButton : public UIRect
     private: inline void SetColorToHoverColor()
     {
         currentColor.r = color.r * onHoverColorMult;
+        if ( currentColor.r < color.r )
+            currentColor.r = 255;
         currentColor.g = color.g * onHoverColorMult;
+        if ( currentColor.g < color.g )
+            currentColor.g = 255;
         currentColor.b = color.b * onHoverColorMult;
+        if ( currentColor.b < color.b )
+            currentColor.b = 255;
         currentColor.a = color.a;
     }
 

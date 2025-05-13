@@ -420,7 +420,7 @@ class ParticleMover
 
     private: inline bool GetCanStateAPassThrougStateB( int aState, int bState )
     {
-        return aState < bState || ( aState == bState && aState != PARTICLE_STATE_POWDER );
+        return !( aState == PARTICLE_STATE_SOLID || bState == PARTICLE_STATE_SOLID || ( aState == bState && aState == PARTICLE_STATE_POWDER ) );
     }
 
 

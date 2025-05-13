@@ -73,7 +73,7 @@ class UIRenderer
             UI_ANCHOR_MODE_LEFT_FILL,
             SDL_FPoint { 5, 10 },
             SDL_FPoint { 120, -20 },
-            SDL_Color { 100, 100, 100, 255 }
+            SDL_Color { 80, 80, 80, 255 }
         );
         uiRoot->AddChild( drawer );
 
