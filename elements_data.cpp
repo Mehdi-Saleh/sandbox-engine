@@ -2,8 +2,10 @@
 #define ELEMENTS_DATA
 
 #include <iostream>
-#include <SDL3/SDL.h>
 #include <string>
+#include <bits/stdc++.h>
+#include <vector>
+#include <SDL3/SDL.h>
 
 
 #define PARTICLE_STATE_SOLID 0
@@ -30,12 +32,12 @@ struct ElementRenderingData
 
 class ElementsData
 {
-    private: int elementsCount = 0;
-    private: ElementParticleData* elementsParticleData = nullptr;
-    private: ElementRenderingData* elementsRenderingData = nullptr;
+    private: std::vector<ElementParticleData> elementsParticleData;
+    private: std::vector<ElementRenderingData> elementsRenderingData;
 
     private: ElementParticleData emptyParticleData = ElementParticleData();
     private: ElementRenderingData emptyRenderingData = ElementRenderingData();
+    private: int elementsCount = 0;
 
 
     public: ElementsData()
@@ -55,106 +57,57 @@ class ElementsData
 
     public: void LoadDefaultElements()
     {
-        elementsCount = 8;
-        elementsParticleData = new ElementParticleData[elementsCount];
-        elementsRenderingData = new ElementRenderingData[elementsCount];
-
-        // Element 0
-        elementsParticleData[0].state = PARTICLE_STATE_SOLID;
-        elementsParticleData[0].density = 5.0;
-        elementsRenderingData[0].name = "Ground";
-        SDL_Color color = SDL_Color();
-        color.r = 30;
-        color.g = 30;
-        color.b = 30;
-        color.a = 255;
-        elementsRenderingData[0].color = color;
-
-        // Element 1
-        elementsParticleData[1].state = PARTICLE_STATE_POWDER;
-        elementsParticleData[1].density = 5.0;
-        elementsRenderingData[1].name = "Sand";
-        color = SDL_Color();
-        color.r = 252;
-        color.g = 219;
-        color.b = 3;
-        color.a = 255;
-        elementsRenderingData[1].color = color;
-
-        // Element 2
-        elementsParticleData[2].state = PARTICLE_STATE_POWDER;
-        elementsParticleData[2].density = 10.0;
-        elementsRenderingData[2].name = "Stone";
-        color = SDL_Color();
-        color.r = 99;
-        color.g = 92;
-        color.b = 92;
-        color.a = 255;
-        elementsRenderingData[2].color = color;
-
-        // Element 3
-        elementsParticleData[3].state = PARTICLE_STATE_POWDER;
-        elementsParticleData[3].density = 0.9;
-        elementsRenderingData[3].name = "Snow";
-        color = SDL_Color();
-        color.r = 255;
-        color.g = 250;
-        color.b = 250;
-        color.a = 255;
-        elementsRenderingData[3].color = color;
-
-        // Element 4
-        elementsParticleData[4].state = PARTICLE_STATE_LIQUID;
-        elementsParticleData[4].density = 1.0;
-        elementsRenderingData[4].name = "Water";
-        color = SDL_Color();
-        color.r = 6;
-        color.g = 3;
-        color.b = 219;
-        color.a = 255;
-        elementsRenderingData[4].color = color;
-
-        // Element 5
-        elementsParticleData[5].state = PARTICLE_STATE_LIQUID;
-        elementsParticleData[5].density = 0.8;
-        elementsRenderingData[5].name = "Oil";
-        color = SDL_Color();
-        color.r = 171;
-        color.g = 131;
-        color.b = 10;
-        color.a = 255;
-        elementsRenderingData[5].color = color;
-
-        // Element 6
-        elementsParticleData[6].state = PARTICLE_STATE_GAS;
-        elementsParticleData[6].density = 0.05;
-        elementsRenderingData[6].name = "Steam";
-        color = SDL_Color();
-        color.r = 92;
-        color.g = 98;
-        color.b = 110;
-        color.a = 255;
-        elementsRenderingData[6].color = color;
-
-
-        // Element 7
-        elementsParticleData[7].state = PARTICLE_STATE_GAS;
-        elementsParticleData[7].density = 0.03;
-        elementsRenderingData[7].name = "Smoke";
-        color = SDL_Color();
-        color.r = 70;
-        color.g = 72;
-        color.b = 98;
-        color.a = 255;
-        elementsRenderingData[7].color = color;
+        AddElement( "Ground Solid 5.0 #1e1e1e" );
+        AddElement( "Sand Powder 5.0 #fcdb03" );
+        AddElement( "Stone Powder 10.0 #635c5c" );
+        AddElement( "Snow Powder 0.9 #fffafa" );
+        AddElement( "Water Liquid 1.0 #0703db" );
+        AddElement( "Oil Liquid 0.8 #ab830a" );
+        AddElement( "Steam Gas 0.05 #5c626e" );
+        AddElement( "Smoke Gas 0.03 #464862" );
     }
 
 
     private: void ClearElements()
     {
-        delete [] elementsParticleData;
-        delete [] elementsRenderingData;
+        elementsParticleData.clear();
+        elementsRenderingData.clear();
         elementsCount = 0;
+    }
+
+
+    public: bool AddElement( std::string elementData )
+    {
+        // Example:
+        // NAME STATE DENSITY HEX_COLOR
+        // Sand Powder 5.0 FFFFFF
+        
+        bool successful = true;
+        ElementParticleData particleData;
+        ElementRenderingData renderingData;
+
+        try
+        {
+            std::vector<std::string> substrings = SplitString( elementData, ' ' );
+            renderingData.name = substrings[0];
+            particleData.state = GetStringToState( substrings[1] );
+            particleData.density = std::stof( substrings[2] );
+            renderingData.color = GetHexToColor( substrings[3] );
+        }
+        catch( const std::exception& e )
+        {
+            std::cerr << "Could not parse element data \"" << elementData << "\":" << e.what() << '\n';
+            successful = false;
+        }
+        
+        if ( successful )
+        {
+            elementsParticleData.push_back( particleData );
+            elementsRenderingData.push_back( renderingData );
+            elementsCount = elementsParticleData.size();
+        }
+
+        return successful;
     }
 
 
@@ -183,6 +136,45 @@ class ElementsData
     public: int GetElementsCount() const
     {
         return elementsCount;
+    }
+
+
+    private: SDL_Color GetHexToColor( std::string hex )
+    {
+        SDL_Color color = SDL_Color();
+        if ( hex[0] == '#' )
+            hex = hex.substr( 1 );
+        color.r = std::stoi( hex.substr( 0, 2 ), nullptr, 16 );
+        color.g = std::stoi( hex.substr( 2, 2 ), nullptr, 16 );
+        color.b = std::stoi( hex.substr( 4, 2 ), nullptr, 16 );
+        color.a = 255;
+        return color;
+    }
+
+
+    private: inline int GetStringToState( const std::string input )
+    {
+        if ( input == "Solid" )
+            return PARTICLE_STATE_SOLID;
+        else if ( input == "Powder" )
+            return PARTICLE_STATE_POWDER;
+        else if ( input == "Liquid" )
+            return PARTICLE_STATE_LIQUID;
+        else if ( input == "Gas" )
+            return PARTICLE_STATE_GAS;
+    }
+
+
+    private: std::vector<std::string> SplitString( const std::string &input, char seperator ) 
+    {
+        std::stringstream stream( input );
+        std::string supstring;
+        std::vector<std::string> output;
+        while ( std::getline( stream, supstring, seperator ) ) 
+        {
+            output.push_back( supstring );
+        }
+        return output;
     }
 };
 
