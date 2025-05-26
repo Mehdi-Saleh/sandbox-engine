@@ -27,6 +27,9 @@ class UIButton : public UIRect
 
     public: bool CheckWasHovered( SDL_FPoint& mousePos ) override
     {
+        if ( !isActive )
+            return false;
+        
         bool wasHovered = UIRect::CheckWasHovered( mousePos );
         if ( wasHovered )
         {
@@ -44,6 +47,9 @@ class UIButton : public UIRect
 
     public: bool CheckWasClicked( SDL_FPoint& clickPos ) override
     {
+        if ( !isActive )
+            return false;
+        
         bool wasClicked = UIRect::CheckWasClicked( clickPos );
         if ( wasClicked )
         {
@@ -60,7 +66,7 @@ class UIButton : public UIRect
 
     protected: void RenderSelf( SDL_Renderer* renderer ) override
     {
-        if ( isHidden )
+        if ( !isActive )
             return;
             
         if ( isRectDirty )

@@ -31,6 +31,8 @@ class Sandbox
     bool running = true;
     SDL_FPoint mouseScreenPos;
     SDL_FPoint mouseBoardPos;
+    bool wasClickingLastFrame = false;
+    bool wasClickingBeforeSelection = false;
 
 
     public: void Start()
@@ -58,6 +60,9 @@ class Sandbox
         {
             std::cerr << "Failed to init renderer. exit code: " << init_exit_code << "\n";
         }
+
+        drawingUtility.onElementSelected = [ this ] ( int element ) { renderer.UpdateSelectedElement( element ); };
+        drawingUtility.SelectElement( 1 );
     }
 
 
@@ -67,12 +72,18 @@ class Sandbox
         mouseScreenPos = inputHandler.GetMousePos();
         mouseBoardPos = renderer.GetScreenToBoardSpace( mouseScreenPos.x, mouseScreenPos.y );
         bool isClicking = inputHandler.GetIsLeftClicking() || inputHandler.GetIsRightClicking();
+        bool justClicked = isClicking && !wasClickingLastFrame;
 
-        bool isMouseOnUI = renderer.HandleMouseInputForUI( mouseScreenPos, isClicking );
+        wasClickingBeforeSelection |= drawingUtility.GetJustSelectedElement() && wasClickingLastFrame;
+        if ( !isClicking )
+            wasClickingBeforeSelection = false;
+
+
+        bool isMouseOnUI = renderer.HandleMouseInputForUI( mouseScreenPos, justClicked );
 
         if ( inputHandler.GetIsQuiting() )
             running = false;
-        else if ( inputHandler.GetIsLeftClicking() && !isMouseOnUI )
+        else if ( inputHandler.GetIsLeftClicking() && !isMouseOnUI && !wasClickingBeforeSelection )
         {
             drawingUtility.AddParticles( mouseBoardPos.x, mouseBoardPos.y );
         }
@@ -94,6 +105,8 @@ class Sandbox
             if ( selectingElement != -1 && selectingElement < elementsData.GetElementsCount() )
                 drawingUtility.SelectElement( selectingElement );
         }
+
+        wasClickingLastFrame = isClicking;
     }
 
 

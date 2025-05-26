@@ -147,8 +147,6 @@ class Renderer
         SDL_FPoint point = SDL_FPoint();
         point.x = screenX / particleSize;
         point.y = screenY / particleSize;
-        // point.x = 1;
-        // point.y = 1;
         return point;
     }
 
@@ -156,6 +154,12 @@ class Renderer
     public: void CreateSelectElementButtons( std::function<void(int)> selectElement )
     {
         uiRenderer->CreateSelectElementButtons( selectElement );
+    }
+
+
+    public: void UpdateSelectedElement( int element )
+    {
+        uiRenderer->UpdateSelectedElement( element );
     }
 };
 

@@ -24,17 +24,37 @@ class UIFloatingBar : public UIElement
 
     public: bool CheckWasHovered( SDL_FPoint& mousePos ) override
     {
-        bool wasHovered = GetIsPosInRect( mousePos );
+        if ( !isActive )
+            return false;
+        
 
-        if ( wasHovered )
+        if ( GetIsPosInRect( mousePos ) )
             UpdateChildPos( mousePos );
 
+        bool wasHovered = false;
         if ( !children.empty() )
             for ( UIElement* child : children )
             {
                 wasHovered |= child->CheckWasHovered( mousePos );
             }
         return wasHovered;
+    }
+
+
+    public: virtual bool CheckWasClicked( SDL_FPoint& clickPos ) override
+    {
+        if ( !isActive )
+            return false;
+        
+        if ( children.empty() )
+            return false;
+        
+        for ( UIElement* child : children )
+        {
+            if ( child->CheckWasClicked( clickPos ) )
+                return true;
+        }
+        return false;
     }
 
 

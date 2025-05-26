@@ -37,6 +37,10 @@ class UIRenderer
 
     private: UIElement* uiRoot = nullptr;
     private: UILabel* fpsIndicator = nullptr;
+    UIFloatingBar* selectionBar = nullptr;
+    UIRect* selectionButtonFrame = nullptr;
+    UIButton* selectionButton = nullptr;
+    UILabel* selectionLabel = nullptr;
 
     private: TTF_Font* fontSmall = nullptr;
     private: TTF_Font* fontMedium = nullptr;
@@ -71,10 +75,41 @@ class UIRenderer
 
     public: void CreateSelectElementButtons( std::function<void(int)> selectElementFunction )
     {
-        selectElement = selectElementFunction;
+        selectElement = [ selectElementFunction, this ]( int element ) { 
+            selectElementFunction( element ); 
+            CloseSelectionBar();
+            };
         int count = elementsData->GetElementsCount();
 
-        UIFloatingBar* selectionBar = new UIFloatingBar(
+        selectionButtonFrame = new UIRect(
+            UI_ANCHOR_MODE_DEFAULT,
+            SDL_FPoint { 5, 10 },
+            SDL_FPoint { SELECT_BUTTON_HEIGHT, SELECT_BUTTON_HEIGHT },
+            SDL_Color { 200, 200, 200, 255 }
+        );
+        selectionButtonFrame->SetPivot( 0.0, 0.0 );
+        uiRoot->AddChild( selectionButtonFrame );
+
+        selectionButton = new UIButton(
+            UI_ANCHOR_MODE_FILL,
+            SDL_FPoint { 1, 1 },
+            SDL_FPoint { -2, -2 },
+            SDL_Color { 100, 100, 100, 255 }
+        );
+        selectionButton->onClick = [ this ] () { OpenSelectionBar(); };
+        selectionButtonFrame->AddChild( selectionButton );
+
+        selectionLabel = new UILabel(
+            UI_ANCHOR_MODE_CENTER,
+            SDL_FPoint { 0, 0 },
+            SDL_FPoint { 0, 0 },
+            SDL_Color { 200, 200, 200, 255 },
+            fontSmall
+        );
+        selectionLabel->SetText( "E" );
+        selectionButton->AddChild( selectionLabel );
+
+        selectionBar = new UIFloatingBar(
             UI_ANCHOR_MODE_LEFT_FILL,
             SDL_FPoint { 5, 10 },
             SDL_FPoint { 120, -20 }
@@ -95,6 +130,8 @@ class UIRenderer
             UIButton* button = CreateSelectElementButton( i );
             container->AddChild( button );
         }
+
+        CloseSelectionBar();
     }
 
 
@@ -264,6 +301,32 @@ class UIRenderer
     {
         int average = ( color.r + color.g + color.b ) / 3; 
         return ( average >= 128 );
+    }
+
+
+    public: void OpenSelectionBar()
+    {
+        selectionBar->isActive = true;
+        selectionButtonFrame->isActive = false;
+    }
+
+
+    public: void CloseSelectionBar()
+    {
+        selectionBar->isActive = false;
+        selectionButtonFrame->isActive = true;
+    }
+
+
+    public: void UpdateSelectedElement( int element )
+    {
+        ElementRenderingData* renderingData = elementsData->GetRenderingData( element );
+        selectionButton->color = renderingData->color;
+        SDL_Color textColor { 255, 255, 255, 255 };
+        if ( GetIsColorLight( renderingData->color ) )
+            textColor = SDL_Color { 0, 0, 0, 255 };
+        selectionLabel->SetColor( textColor );
+        CloseSelectionBar();
     }
 };
 

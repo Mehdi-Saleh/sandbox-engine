@@ -49,6 +49,9 @@ class UILabel : public UIElement
 
     public: bool CheckWasHovered( SDL_FPoint& mousePos ) override
     {
+        if ( !isActive )
+            return false;
+        
         if ( GetIsPosInRect( mousePos ) )
             return true;
 
@@ -66,6 +69,9 @@ class UILabel : public UIElement
 
     public: bool CheckWasClicked( SDL_FPoint& clickPos ) override
     {
+        if ( !isActive )
+            return false;
+        
         if ( GetIsPosInRect( clickPos ) )
             return true;
 

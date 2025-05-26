@@ -8,7 +8,6 @@
 class UIRect : public UIElement
 {
     public: SDL_Color color { 100, 100, 100, 255 };
-    protected: bool isHidden = false;
 
 
     public: UIRect( short anchorMode, SDL_FPoint relativePos, SDL_FPoint size, SDL_Color color ):
@@ -20,6 +19,9 @@ class UIRect : public UIElement
 
     public: bool CheckWasHovered( SDL_FPoint& mousePos ) override
     {
+        if ( !isActive )
+            return false;
+        
         bool wasHovered = GetIsPosInRect( mousePos );
 
         if ( !children.empty() )
@@ -33,6 +35,9 @@ class UIRect : public UIElement
 
     public: bool CheckWasClicked( SDL_FPoint& clickPos ) override
     {
+        if ( !isActive )
+            return false;
+        
         bool wasClicked = GetIsPosInRect( clickPos );
 
         if ( !children.empty() )
@@ -46,7 +51,7 @@ class UIRect : public UIElement
 
     protected: void RenderSelf( SDL_Renderer* renderer ) override
     {
-        if ( isHidden )
+        if ( !isActive )
             return;
             
         if ( isRectDirty )

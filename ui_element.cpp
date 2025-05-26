@@ -14,6 +14,7 @@ class UIElement
     protected: SDL_FPoint size { 10, 10 };
     protected: SDL_FRect rect;
     protected: bool isRectDirty = true;
+    public: bool isActive = true;
 
     protected: UIElement* parent = nullptr;
     protected: std::vector<UIElement*> children;
@@ -66,6 +67,9 @@ class UIElement
 
     public: void RenderSelfAndChildren( SDL_Renderer* renderer )
     {
+        if ( !isActive )
+            return;
+        
         RenderSelf( renderer );
         if ( !children.empty() )
             for ( UIElement* child : children )
@@ -101,6 +105,9 @@ class UIElement
 
     public: virtual bool CheckWasHovered( SDL_FPoint& mousePos )
     {
+        if ( !isActive )
+            return false;
+        
         // Override in children classes
         if ( children.empty() )
             return false;
@@ -116,6 +123,9 @@ class UIElement
 
     public: virtual bool CheckWasClicked( SDL_FPoint& clickPos )
     {
+        if ( !isActive )
+            return false;
+        
         // Override in children classes
         if ( children.empty() )
             return false;

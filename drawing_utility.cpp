@@ -1,6 +1,7 @@
 #ifndef DRAWING_UTILITY
 #define DRAWING_UTILITY
 
+#include <functional>
 #include "particles_manager.cpp"
 
 
@@ -10,6 +11,9 @@ class DrawingUtility
 
     public: int brushSize = 6;
     private: int selectedElement = 1;
+    private: bool justSelectedElement = false;
+
+    public: std::function<void(int)> onElementSelected;
     
     
     public: DrawingUtility( ParticlesManager* particlesManager )
@@ -21,6 +25,9 @@ class DrawingUtility
     public: void SelectElement( int element )
     {
         selectedElement = element;
+        justSelectedElement = true;
+        if ( onElementSelected )
+            onElementSelected( element );
     }
 
 
@@ -77,6 +84,18 @@ class DrawingUtility
     private: inline bool GetIsInCircle( int x, int y, int r )
     {
         return x*x + y*y <= r*r;
+    }
+
+
+    public: bool GetJustSelectedElement()
+    {
+        if ( justSelectedElement )
+        {
+            justSelectedElement = false;
+            return true;
+        }
+        else
+            return false;
     }
 };
 
