@@ -24,6 +24,7 @@ add_executable(
 		ui_element.cpp
 		ui_rect.cpp
 		ui_label.cpp
+		ui_floating_bar.cpp
 		fps_manager.cpp
 		)
 

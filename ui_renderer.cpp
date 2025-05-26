@@ -11,11 +11,16 @@
 #include "ui_rect.cpp"
 #include "ui_label.cpp"
 #include "ui_button.cpp"
+#include "ui_floating_bar.cpp"
 
 
 #define SMALL_FONT_SIZE 12
 #define MEDIUM_FONT_SIZE 16
 #define BIG_FONT_SIZE 20
+
+#define SELECT_BUTTON_WIDTH 110
+#define SELECT_BUTTON_HEIGHT 40
+#define SELECT_BUTTON_SPACING 5
 
 
 class UIRenderer
@@ -69,18 +74,26 @@ class UIRenderer
         selectElement = selectElementFunction;
         int count = elementsData->GetElementsCount();
 
-        UIRect* drawer = new UIRect(
+        UIFloatingBar* selectionBar = new UIFloatingBar(
             UI_ANCHOR_MODE_LEFT_FILL,
             SDL_FPoint { 5, 10 },
-            SDL_FPoint { 120, -20 },
-            SDL_Color { 80, 80, 80, 255 }
+            SDL_FPoint { 120, -20 }
         );
-        uiRoot->AddChild( drawer );
+        selectionBar->isFloatingY = true;
+        uiRoot->AddChild( selectionBar );
+
+        UIElement* container = new UIElement(
+            UI_ANCHOR_MODE_DEFAULT,
+            SDL_FPoint { 0, 0 },
+            SDL_FPoint { 120, ( float ) ( SELECT_BUTTON_HEIGHT + SELECT_BUTTON_SPACING ) * count }
+        );
+        container->SetPivot( 0.0, 0.0 );
+        selectionBar->AddChild( container );
 
         for ( int i = 0; i < count; i++ )
         {
             UIButton* button = CreateSelectElementButton( i );
-            drawer->AddChild( button );
+            container->AddChild( button );
         }
     }
 
@@ -218,17 +231,12 @@ class UIRenderer
 
     private: UIButton* CreateSelectElementButton( int element )
     {
-
-        const int buttonW = 110;
-        const int buttonH = 40;
-        const int buttonSpacing = 5;
-
         ElementRenderingData* renderingData = elementsData->GetRenderingData( element );
         
         UIButton* button = new UIButton(
             UI_ANCHOR_MODE_TOP,
-            SDL_FPoint { 0, (float) ( element + 1 ) * ( buttonH + buttonSpacing ) },
-            SDL_FPoint { buttonW, buttonH },
+            SDL_FPoint { 0, (float) ( element + 0.5 ) * ( SELECT_BUTTON_HEIGHT + SELECT_BUTTON_SPACING ) },
+            SDL_FPoint { SELECT_BUTTON_WIDTH, SELECT_BUTTON_HEIGHT },
             renderingData->color
         );
         if ( !selectElement )

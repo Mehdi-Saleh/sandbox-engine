@@ -55,12 +55,12 @@ class UIElement
     }
 
 
-    public: void UpdateSelfAndChildren()
+    public: void UpdateSelfAndChildren( bool forceUpdate = false )
     {
-        UpdateRect();
+        UpdateRect( forceUpdate );
         if ( !children.empty() )
             for ( UIElement* child : children )
-                child->UpdateSelfAndChildren();
+                child->UpdateSelfAndChildren( forceUpdate );
     }
 
 
@@ -70,6 +70,32 @@ class UIElement
         if ( !children.empty() )
             for ( UIElement* child : children )
                 child->RenderSelfAndChildren( renderer );
+    }
+
+
+    public: void SetRelativePos( const SDL_FPoint& newPos )
+    {
+        relativePos = newPos;
+        isRectDirty = true;
+    }
+
+
+    public: SDL_FPoint GetRelativePos()
+    {
+        return relativePos;
+    }
+
+
+    public: void SetSize( const SDL_FPoint& newSize )
+    {
+        size = newSize;
+        isRectDirty = true;
+    }
+
+
+    public: SDL_FPoint GetSize()
+    {
+        return size;
     }
 
 
@@ -103,8 +129,10 @@ class UIElement
     }
 
 
-    private: void UpdateRect()
+    private: void UpdateRect( bool forceUpdate = false )
     {
+        if ( forceUpdate )
+            isRectDirty = true;
         SDL_FPoint realPos = GetRealPos();
         rect.x = realPos.x;
         rect.y = realPos.y;
