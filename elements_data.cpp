@@ -5,6 +5,8 @@
 #include <string>
 #include <bits/stdc++.h>
 #include <vector>
+#include <set>
+#include <algorithm>
 #include <SDL3/SDL.h>
 
 
@@ -30,13 +32,28 @@ struct ElementRenderingData
 };
 
 
+struct ChemData
+{
+    public: std::set<int> inElements;
+    public: std::set<int> outElements;
+    public: float chance;
+
+    public: bool empty()
+    {
+        return inElements.empty();
+    }
+};
+
+
 class ElementsData
 {
     private: std::vector<ElementParticleData> elementsParticleData;
     private: std::vector<ElementRenderingData> elementsRenderingData;
+    private: std:: vector<ChemData> chemsData;
 
     private: ElementParticleData emptyParticleData = ElementParticleData();
     private: ElementRenderingData emptyRenderingData = ElementRenderingData();
+    private: ChemData emptyChemData = ChemData();
     private: int elementsCount = 0;
 
 
@@ -46,12 +63,14 @@ class ElementsData
         emptyRenderingData.color.g = 0;
         emptyRenderingData.color.b = 255;
         emptyRenderingData.color.a = 255;
+        emptyChemData.chance = 0.0;
     }
 
 
     ~ElementsData()
     {
         ClearElements();
+        ClearChems();
     }
 
 
@@ -65,6 +84,29 @@ class ElementsData
         AddElement( "Oil Liquid 0.8 #ab830a" );
         AddElement( "Steam Gas 0.05 #5c626e" );
         AddElement( "Smoke Gas 0.03 #464862" );
+    }
+
+
+    public: void LoadDefaultChems()
+    {
+        // Add default chems
+        // Sand Water =>1.0 Stone
+        chemsData.push_back(
+            ChemData {
+                std::set<int> { 1, 4 },
+                std::set<int> { 2 },
+                1.0
+            }
+        );
+
+        // Stone Oil =>1.0 Pufff!
+        chemsData.push_back(
+            ChemData {
+                std::set<int> { 2, 5 },
+                std::set<int> { 5 },
+                1.0
+            }
+        );
     }
 
 
@@ -111,6 +153,19 @@ class ElementsData
     }
 
 
+    private: void ClearChems()
+    {
+        chemsData.clear();
+    }
+
+
+    public: bool AddChem( std::string chemData )
+    {
+        // TODO
+        return true;
+    }
+
+
     public: ElementParticleData* GetParticleData( int id )
     {
         if ( id >= elementsCount || id < 0 )
@@ -133,9 +188,50 @@ class ElementsData
     }
 
 
+    public: ChemData GetChem( int chemId )
+    {
+        return chemsData[chemId];
+    }
+
+
+    public: ChemData& DecideChem( std::set<int> &inElements )
+    {
+        std::vector<int> possibleChems = GetAllPossibleChems( inElements );
+        if ( possibleChems.empty() )
+            return emptyChemData;
+        
+        return chemsData[possibleChems[0]];
+    }
+
+
+    public: std::vector<int> GetAllPossibleChems( std::set<int> &inElements )
+    {
+        std::vector<int> possibleChems;
+
+        int count = GetChemsCount();
+        for ( int i = 0; i < count; i++ )
+        {
+            if ( std::includes( 
+                inElements.begin(), inElements.end(), 
+                chemsData[i].inElements.begin(), chemsData[i].inElements.end() 
+                ) 
+                )
+                possibleChems.push_back( i );
+        }
+
+        return possibleChems;
+    }
+
+
     public: int GetElementsCount() const
     {
         return elementsCount;
+    }
+
+
+    public: int GetChemsCount() const
+    {
+        return chemsData.size();
     }
 
 
@@ -162,6 +258,8 @@ class ElementsData
             return PARTICLE_STATE_LIQUID;
         else if ( input == "Gas" )
             return PARTICLE_STATE_GAS;
+        else
+            return PARTICLE_STATE_SOLID;
     }
 
 
@@ -176,6 +274,17 @@ class ElementsData
         }
         return output;
     }
+
+
+    struct SetIsGreaterComparator 
+    {
+        // Operator() overloading
+        bool operator()( std::set<int> &s0, std::set<int> &s1 ) const
+        {
+            // new definition
+            return s0.size() > s1.size();
+        }
+    };
 };
 
 #endif

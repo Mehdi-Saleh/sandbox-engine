@@ -2,6 +2,7 @@
 #define PARTICLES_MANAGER
 
 #include <iostream>
+#include <set>
 #include "particle_mover.cpp"
 #include "elements_data.cpp"
 #include "particle_dirs.cpp"
@@ -18,7 +19,7 @@ class ParticlesManager
 
     private: ParticleMover particleMover;
 
-    private: bool lastUpdateWasLeftToRight = false;
+    private: bool isUpdateCountEven = false;
 
 
     public: ParticlesManager( int boardWidth, int boardHeight, ElementsData* elementsData )
@@ -123,8 +124,16 @@ class ParticlesManager
 
     public: void Update()
     {
+        UpdateMovement();
+        ApplyChems();
+        isUpdateCountEven = !isUpdateCountEven;
+    }
+
+
+    private: void UpdateMovement()
+    {
         ClearAlreadyMoved();
-        if ( lastUpdateWasLeftToRight )
+        if ( isUpdateCountEven )
         {
             for ( int j = boardHeight - 1; j >= 0; j-- )
                 for ( int i = boardWidth - 1; i >= 0; i-- )
@@ -158,8 +167,67 @@ class ParticlesManager
                     UpdateParticleOnlyLeftAndRight( i, j );
                 }
         }
+    }
+
+
+    private: void ApplyChems()
+    {
+        ChemData chemData;
+        // TODO: maye need to update in 4 different ways if any weird behaviour is seen
+        for ( int i = ( isUpdateCountEven ) ? 1:0; i < boardWidth - 1; i+=2 )
+            for ( int j = ( isUpdateCountEven ) ? 1:0; j < boardHeight - 1; j+=2 )
+            {
+                chemData = DecideChemIn2By2Square( i, j );
+                if ( chemData.empty() )
+                    continue;
+                else
+                    ApplyChemIn2By2Square( i, j, chemData );
+            }
+    }
+
+    private: ChemData& DecideChemIn2By2Square( int x, int y )
+    {
+        std::set<int> inElements;
+        if ( board[x][y] != -1 )
+            inElements.insert( board[x][y] );
+        if ( board[x+1][y] != -1 )
+            inElements.insert( board[x+1][y] );
+        if ( board[x][y+1] != -1 )
+            inElements.insert( board[x][y+1] );
+        if ( board[x+1][y+1] != -1 )
+            inElements.insert( board[x+1][y+1] );
         
-        lastUpdateWasLeftToRight = !lastUpdateWasLeftToRight;
+        return elementsData->DecideChem( inElements );
+    }
+
+
+    private: void ApplyChemIn2By2Square( int x, int y, ChemData chem )
+    {
+        // IMPORTANT!! the functions below change the given chem as they do their job
+        ApplyChemToTile( x, y, &chem );
+        ApplyChemToTile( x+1, y, &chem );
+        ApplyChemToTile( x, y+1, &chem );
+        ApplyChemToTile( x+1, y+1, &chem );
+    }
+
+
+    private: void ApplyChemToTile( int x, int y, ChemData *chem )
+    {
+        if ( board[x][y] != -1 )
+            if ( chem->inElements.find( board[x][y] )!=chem->inElements.end() )
+            {
+                chem->inElements.erase( board[x][y] );
+                if ( !chem->outElements.empty() )
+                {
+                    board[x][y] = *chem->outElements.begin();
+                    chem->outElements.erase( board[x][y] );
+                }
+                else
+                {
+                    board[x][y] = -1;
+                }
+            }
+
     }
 
 

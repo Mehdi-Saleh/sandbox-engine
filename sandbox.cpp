@@ -54,6 +54,7 @@ class Sandbox
     private: void Init()
     {
         elementsData.LoadDefaultElements();
+        elementsData.LoadDefaultChems();
         int init_exit_code = renderer.Init();
         renderer.CreateSelectElementButtons( [this](int id){ drawingUtility.SelectElement( id ); } );
         if ( init_exit_code != 0 )
