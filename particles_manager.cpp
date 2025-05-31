@@ -187,7 +187,7 @@ class ParticlesManager
 
     private: ChemData& DecideChemIn2By2Square( int x, int y )
     {
-        std::set<int> inElements;
+        std::multiset<int> inElements;
         if ( board[x][y] != -1 )
             inElements.insert( board[x][y] );
         if ( board[x+1][y] != -1 )
@@ -216,11 +216,11 @@ class ParticlesManager
         if ( board[x][y] != -1 )
             if ( chem->inElements.find( board[x][y] )!=chem->inElements.end() )
             {
-                chem->inElements.erase( board[x][y] );
+                chem->inElements.erase( chem->inElements.find( board[x][y] ) );
                 if ( !chem->outElements.empty() )
                 {
                     board[x][y] = *chem->outElements.begin();
-                    chem->outElements.erase( board[x][y] );
+                    chem->outElements.erase( chem->outElements.find( board[x][y] ) );
                 }
                 else
                 {

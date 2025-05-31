@@ -34,8 +34,8 @@ struct ElementRenderingData
 
 struct ChemData
 {
-    public: std::set<int> inElements;
-    public: std::set<int> outElements;
+    public: std::multiset<int> inElements;
+    public: std::multiset<int> outElements;
     public: float chance;
 
     public: bool empty()
@@ -82,6 +82,7 @@ class ElementsData
         AddElement( "Snow Powder 0.9 #fffafa" );
         AddElement( "Water Liquid 1.0 #0703db" );
         AddElement( "Oil Liquid 0.8 #ab830a" );
+        AddElement( "Magma Liquid 8.0 #fc3003" );
         AddElement( "Steam Gas 0.05 #5c626e" );
         AddElement( "Smoke Gas 0.03 #464862" );
     }
@@ -93,8 +94,8 @@ class ElementsData
         // Sand Water =>1.0 Stone
         chemsData.push_back(
             ChemData {
-                std::set<int> { 1, 4 },
-                std::set<int> { 2 },
+                std::multiset<int> { 6, 4 },
+                std::multiset<int> { 2, 7 },
                 1.0
             }
         );
@@ -102,8 +103,8 @@ class ElementsData
         // Stone Oil =>1.0 Pufff!
         chemsData.push_back(
             ChemData {
-                std::set<int> { 2, 5 },
-                std::set<int> { 5 },
+                std::multiset<int> { 6, 2 },
+                std::multiset<int> { 6, 6 },
                 1.0
             }
         );
@@ -194,7 +195,7 @@ class ElementsData
     }
 
 
-    public: ChemData& DecideChem( std::set<int> &inElements )
+    public: ChemData& DecideChem( std::multiset<int> &inElements )
     {
         std::vector<int> possibleChems = GetAllPossibleChems( inElements );
         if ( possibleChems.empty() )
@@ -204,7 +205,7 @@ class ElementsData
     }
 
 
-    public: std::vector<int> GetAllPossibleChems( std::set<int> &inElements )
+    public: std::vector<int> GetAllPossibleChems( std::multiset<int> &inElements )
     {
         std::vector<int> possibleChems;
 
@@ -279,7 +280,7 @@ class ElementsData
     struct SetIsGreaterComparator 
     {
         // Operator() overloading
-        bool operator()( std::set<int> &s0, std::set<int> &s1 ) const
+        bool operator()( std::multiset<int> &s0, std::multiset<int> &s1 ) const
         {
             // new definition
             return s0.size() > s1.size();
