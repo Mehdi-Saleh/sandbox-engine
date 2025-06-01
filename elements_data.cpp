@@ -77,37 +77,45 @@ class ElementsData
     public: void LoadDefaultElements()
     {
         AddElement( "Ground Solid 5.0 #1e1e1e" );
+        AddElement( "Stone Solid 10.0 #505555" );
+        AddElement( "Wood Solid 2.0 #693406" );
+        AddElement( "Lit_Wood Solid 2.0 #fc2c03" );
         AddElement( "Sand Powder 5.0 #fcdb03" );
-        AddElement( "Stone Powder 10.0 #635c5c" );
+        AddElement( "Dust Powder 10.0 #635c5c" );
         AddElement( "Snow Powder 0.9 #fffafa" );
         AddElement( "Water Liquid 1.0 #0703db" );
         AddElement( "Oil Liquid 0.8 #ab830a" );
-        AddElement( "Magma Liquid 8.0 #fc3003" );
+        AddElement( "Lit_Oil Liquid 0.8 #fc4a03" );
+        AddElement( "Lava Liquid 8.0 #fc3003" );
         AddElement( "Steam Gas 0.05 #5c626e" );
         AddElement( "Smoke Gas 0.03 #464862" );
+        AddElement( "Fire Gas 0.001 #fc8312" );
     }
 
 
     public: void LoadDefaultChems()
     {
         // Add default chems
-        // Sand Water =>1.0 Stone
-        chemsData.push_back(
-            ChemData {
-                std::multiset<int> { 6, 4 },
-                std::multiset<int> { 2, 7 },
-                1.0
-            }
-        );
+        AddChem( "Lava Water =1.0 Stone Steam");
+        AddChem( "Lava Snow =0.1 Water");
+        AddChem( "Lava Stone =0.01 Lava Lava");
+        AddChem( "Lava Dust =0.02 Lava Lava");
+        AddChem( "Lava Wood =0.02 Lava Lit_Wood");
+        AddChem( "Lava Oil =0.02 Lava Lit_Oil");
+        AddChem( "Fire =0.15");
+        AddChem( "Fire Water =0.1 Steam");
+        AddChem( "Fire Snow =0.1 Water");
+        AddChem( "Fire Stone =0.01 Lava");
+        AddChem( "Fire Dust =0.02 Lava");
+        AddChem( "Fire Wood =0.02 Lit_Wood");
+        AddChem( "Wood Lit_Wood =0.005 Lit_Wood Lit_Wood");
+        AddChem( "Lit_Wood Water =0.2 Wood Steam");
+        AddChem( "Lit_Wood =0.001 Wood");
 
-        // Stone Oil =>1.0 Pufff!
-        chemsData.push_back(
-            ChemData {
-                std::multiset<int> { 6, 2 },
-                std::multiset<int> { 6, 6 },
-                1.0
-            }
-        );
+        AddChem( "Fire Oil =0.1 Lit_Oil");
+        AddChem( "Oil Lit_Oil =0.05 Lit_Oil Lit_Oil");
+        AddChem( "Lit_Oil Water =0.2 Oil Steam");
+        AddChem( "Lit_Oil =0.001 Oil");
     }
 
 
@@ -162,8 +170,50 @@ class ElementsData
 
     public: bool AddChem( std::string chemData )
     {
-        // TODO
-        return true;
+        // Example:
+        // E0 E2 =CHANCE E3 E4
+        // Stone Lava =0.01 Lava Lava
+        
+        bool successful = true;
+        ChemData finalChemData;
+
+        try
+        {
+            std::vector<std::string> substrings = SplitString( chemData, ' ' );
+            int i = 0;
+            for ( ; i < substrings.size(); i++ )
+            {
+                if ( substrings[i].front() == '=' )
+                    break;
+                int chem = GetStringToChemId( substrings[i] );
+                if ( chem != -1 )
+                    finalChemData.inElements.insert( chem );
+                else
+                    successful = false;
+            }
+            finalChemData.chance = std::stof( substrings[i].substr( 1, substrings[i].size()-1 ) );
+            i++;
+            for ( ; i < substrings.size(); i++ )
+            {
+                int chem = GetStringToChemId( substrings[i] );
+                if ( chem != -1 )
+                    finalChemData.outElements.insert( chem );
+                else
+                    successful = false;
+            }
+        }
+        catch( const std::exception& e )
+        {
+            std::cerr << "Could not parse chemistry data \"" << chemData << "\":" << e.what() << '\n';
+            successful = false;
+        }
+        
+        if ( successful )
+        {
+            chemsData.push_back( finalChemData );
+        }
+
+        return successful;
     }
 
 
@@ -201,7 +251,12 @@ class ElementsData
         if ( possibleChems.empty() )
             return emptyChemData;
         
-        return chemsData[possibleChems[0]];
+        for ( int chem : possibleChems )
+        {
+            if ( SDL_randf() < chemsData[chem].chance )
+                return chemsData[chem];
+        }
+        return emptyChemData;
     }
 
 
@@ -261,6 +316,16 @@ class ElementsData
             return PARTICLE_STATE_GAS;
         else
             return PARTICLE_STATE_SOLID;
+    }
+
+
+    private: inline int GetStringToChemId( const std::string input )
+    {
+        for ( int i = 0; i < elementsCount; i++ )
+            if ( elementsRenderingData[i].name.compare( input ) == 0 )
+                return i;
+        std::cerr << "Could not parse element name \"" << input << "\"\n";
+        return -1;
     }
 
 

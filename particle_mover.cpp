@@ -134,7 +134,7 @@ class ParticleMover
 
         if ( isRightFirst )
         {
-            if ( GetCanAPassThroughB( x, y, rightX, rightY ) && !GetHasAlreadyMoved( rightX, rightY ) && GetIsTheSameElement( x, y, leftX, leftY ) )
+            if ( GetCanAPassThroughB( x, y, rightX, rightY ) && !GetHasAlreadyMoved( rightX, rightY ) )
             {
                 Swap( x, y, rightX, rightY );
                 lastParticleDirs[x][y] = PARTICLE_DIR_LEFT;
@@ -143,7 +143,7 @@ class ParticleMover
             }
         }
 
-        if ( GetCanAPassThroughB( x, y, leftX, leftY ) && !GetHasAlreadyMoved( leftX, leftY ) && GetIsTheSameElement( x, y, rightX, rightY ) )
+        if ( GetCanAPassThroughB( x, y, leftX, leftY ) && !GetHasAlreadyMoved( leftX, leftY ) )
         {
             Swap( x, y, leftX, leftY );
             lastParticleDirs[x][y] = PARTICLE_DIR_RIGHT;
@@ -153,7 +153,7 @@ class ParticleMover
 
         if ( !isRightFirst )
         {
-            if ( GetCanAPassThroughB( x, y, rightX, rightY ) && !GetHasAlreadyMoved( rightX, rightY ) && GetIsTheSameElement( x, y, leftX, leftY ) )
+            if ( GetCanAPassThroughB( x, y, rightX, rightY ) && !GetHasAlreadyMoved( rightX, rightY ) )
             {
                 Swap( x, y, rightX, rightY );
                 lastParticleDirs[x][y] = PARTICLE_DIR_LEFT;
