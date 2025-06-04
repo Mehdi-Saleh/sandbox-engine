@@ -9,10 +9,12 @@
 class InputHandler
 {
     private: bool isQuiting = false;
-    private: bool isHoldingShift = false;
     private: bool isTogglingUI = false;
+    private: bool isTogglingSimulationPause = false;
+    private: bool isHoldingShift = false;
     private: bool isLeftClicking = false;
     private: bool isRightClicking = false;
+    private: bool isMiddleClicking = false;
     private: bool isIncreasingBrushSize = false;
     private: bool isDecreasingBrushSize = false;
     private: int isSelectingElement = -1;
@@ -24,6 +26,7 @@ class InputHandler
         SDL_GetMouseState( &mousePos.x, &mousePos.y );
 
         isTogglingUI = false;
+        isTogglingSimulationPause = false;
         isIncreasingBrushSize = false;
         isDecreasingBrushSize = false;
         isSelectingElement = -1;
@@ -41,6 +44,8 @@ class InputHandler
                     isLeftClicking = true;
                 else if ( event.button.button == SDL_BUTTON_RIGHT )
                     isRightClicking = true;
+                else if ( event.button.button == SDL_BUTTON_MIDDLE )
+                    isMiddleClicking = true;
             }
             else if (event.type == SDL_EVENT_MOUSE_BUTTON_UP) 
             {
@@ -48,6 +53,8 @@ class InputHandler
                     isLeftClicking = false;
                 else if ( event.button.button == SDL_BUTTON_RIGHT )
                     isRightClicking= false;
+                else if ( event.button.button == SDL_BUTTON_MIDDLE )
+                    isMiddleClicking = false;
             }
             else if ( event.type == SDL_EVENT_MOUSE_WHEEL ) 
             {
@@ -61,6 +68,7 @@ class InputHandler
                 if ( event.key.scancode == SDL_SCANCODE_LSHIFT )
                     isHoldingShift = true;
                 isTogglingUI |= event.key.scancode == SDL_SCANCODE_ESCAPE;
+                isTogglingSimulationPause |= event.key.scancode == SDL_SCANCODE_SPACE;
                 isIncreasingBrushSize |= event.key.scancode == SDL_SCANCODE_W;
                 isDecreasingBrushSize |= event.key.scancode == SDL_SCANCODE_S;
 
@@ -108,6 +116,12 @@ class InputHandler
     }
 
 
+    public: bool GetIsTogglingSimulationPause()
+    {
+        return isTogglingSimulationPause;
+    }
+
+
     public: bool GetIsLeftClicking()
     {
         return isLeftClicking;
@@ -117,6 +131,12 @@ class InputHandler
     public: bool GetIsRightClicking()
     {
         return isRightClicking;
+    }
+
+
+    public: bool GetIsMiddleClicking()
+    {
+        return isMiddleClicking;
     }
 
 

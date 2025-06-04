@@ -265,7 +265,16 @@ class ParticlesManager
     }
 
 
-    private: inline bool GetIsOutOfBounds( int x, int y )
+    public: int GetParticle( int x, int y ) const
+    {
+        if ( GetIsOutOfBounds( x, y ) )
+            return -1;
+
+        return board[x][y];
+    }
+
+
+    private: inline bool GetIsOutOfBounds( int x, int y ) const
     {
         return ( 
             x >= boardWidth 

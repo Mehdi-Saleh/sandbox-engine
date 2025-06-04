@@ -87,6 +87,8 @@ class Sandbox
             running = false;
         else if ( inputHandler.GetIsTogglingUI() )
             renderer.ToggleUI();
+        else if ( inputHandler.GetIsTogglingSimulationPause() )
+            fpsManager.TogglePause();
         else if ( inputHandler.GetIsLeftClicking() && !isMouseOnUI && !wasClickingBeforeSelection )
         {
             drawingUtility.AddParticles( mouseBoardPos.x, mouseBoardPos.y );
@@ -94,6 +96,11 @@ class Sandbox
         else if ( inputHandler.GetIsRightClicking() && !isMouseOnUI )
         {
             drawingUtility.EraseParticles( mouseBoardPos.x, mouseBoardPos.y );
+        }
+
+        else if ( inputHandler.GetIsMiddleClicking() && !isMouseOnUI )
+        {
+            drawingUtility.SelectElementFromBoard( mouseBoardPos.x, mouseBoardPos.y );
         }
         else if ( inputHandler.GetIsIncreasingBrushSize() )
         {

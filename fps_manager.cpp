@@ -11,7 +11,7 @@ class FPSManager
 {
     public: bool shouldUpdateSimulation = true;
     public: bool shouldRender = true;
-    
+    public: bool isPaused = false;
     
     private: float targetUpdateDelay = FPSToDelayInMilliseconds( TARGET_SIMULATION_FPS );
     private: float targetRenderDelay = FPSToDelayInMilliseconds( TARGET_RENDER_FPS );
@@ -29,7 +29,10 @@ class FPSManager
 
     public: int GetUpdateFPS() const
     {
-        return DelayInMillisecondsToFPS( averageUpdateDelay ) + 1;
+        if ( isPaused )
+            return 0;
+        else
+            return DelayInMillisecondsToFPS( averageUpdateDelay ) + 1;
     }
 
 
@@ -51,6 +54,8 @@ class FPSManager
             lastUpdateTimeInMilliseconds = newTimePassed;
             UpdateAverageUpdateDelay( timeSinceLastUpdate );
         }
+        if ( isPaused )
+            shouldUpdateSimulation = false;
 
         shouldRender = false;
         int timeSinceLastRender = newTimePassed - lastRenderTimeInMilliseconds;
@@ -90,6 +95,12 @@ class FPSManager
     private: inline float DelayInMillisecondsToFPS( float delayInMilliseconds ) const
     {
         return 1000.0 / delayInMilliseconds;
+    }
+
+
+    public: void TogglePause()
+    {
+        isPaused = !isPaused;
     }
 };
 

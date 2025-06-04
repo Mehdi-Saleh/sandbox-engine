@@ -81,6 +81,14 @@ class DrawingUtility
     }
 
 
+    public: void SelectElementFromBoard( int x, int y )
+    {
+        int element = particlesManager->GetParticle( x, y );
+        if ( element != -1 )
+            SelectElement( element );
+    }
+
+
     private: inline bool GetIsInCircle( int x, int y, int r )
     {
         return x*x + y*y <= r*r;
