@@ -10,5 +10,6 @@ Just download and extract the zip file from Realeases. Then run the sandbox-engi
 - Mouse scroll - Change brush size
 - 0-9 - Select elements 0 to 9
 - 0-9 + shift - Select elements 10 to 19
+- You can also select elements by clicking on the E icon
 - Space - Pause/unpause simulation
 - Esc - Hide/show UI
