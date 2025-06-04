@@ -30,6 +30,7 @@ class UIRenderer
     private: int windowWidth = 10;
     private: int windowHeight = 10;
     private: float particleSize = 8;
+    private: float uiScale = 1.0;
 
     public: SDL_FPoint mousePos;
     private: int mouseMarkerRadius = 10;
@@ -49,12 +50,13 @@ class UIRenderer
     private: std::function<void(int)> selectElement;
 
 
-    public: UIRenderer( int width, int height, float partileSize, ElementsData* elementsData )
+    public: UIRenderer( int width, int height, float partileSize, float uiScale, ElementsData* elementsData )
     {
         this->elementsData = elementsData;
         windowWidth = width;
         windowHeight = height;
         this->particleSize = partileSize;
+        this->uiScale = uiScale;
     }
 
 
@@ -83,8 +85,8 @@ class UIRenderer
 
         selectionButtonFrame = new UIRect(
             UI_ANCHOR_MODE_DEFAULT,
-            SDL_FPoint { 5, 10 },
-            SDL_FPoint { SELECT_BUTTON_HEIGHT, SELECT_BUTTON_HEIGHT },
+            SDL_FPoint { 5 * uiScale, 10 * uiScale },
+            SDL_FPoint { SELECT_BUTTON_HEIGHT * uiScale, SELECT_BUTTON_HEIGHT * uiScale },
             SDL_Color { 200, 200, 200, 255 }
         );
         selectionButtonFrame->SetPivot( 0.0, 0.0 );
@@ -92,8 +94,8 @@ class UIRenderer
 
         selectionButton = new UIButton(
             UI_ANCHOR_MODE_FILL,
-            SDL_FPoint { 1, 1 },
-            SDL_FPoint { -2, -2 },
+            SDL_FPoint { 1 * uiScale, 1 * uiScale },
+            SDL_FPoint { -2 * uiScale, -2 * uiScale },
             SDL_Color { 100, 100, 100, 255 }
         );
         selectionButton->onClick = [ this ] () { OpenSelectionBar(); };
@@ -111,8 +113,8 @@ class UIRenderer
 
         selectionBar = new UIFloatingBar(
             UI_ANCHOR_MODE_LEFT_FILL,
-            SDL_FPoint { 5, 10 },
-            SDL_FPoint { 120, -20 }
+            SDL_FPoint { 5 * uiScale, 10 * uiScale },
+            SDL_FPoint { 120 * uiScale, -20 * uiScale }
         );
         selectionBar->isFloatingY = true;
         uiRoot->AddChild( selectionBar );
@@ -120,7 +122,7 @@ class UIRenderer
         UIElement* container = new UIElement(
             UI_ANCHOR_MODE_DEFAULT,
             SDL_FPoint { 0, 0 },
-            SDL_FPoint { 120, ( float ) ( SELECT_BUTTON_HEIGHT + SELECT_BUTTON_SPACING ) * count }
+            SDL_FPoint { 120 * uiScale, ( float ) ( SELECT_BUTTON_HEIGHT + SELECT_BUTTON_SPACING ) * count * uiScale }
         );
         container->SetPivot( 0.0, 0.0 );
         selectionBar->AddChild( container );
@@ -139,9 +141,9 @@ class UIRenderer
     {
         TTF_Init();
 
-        fontSmall = TTF_OpenFont( "PixelEmulator-xq08.ttf", SMALL_FONT_SIZE );
-        fontMedium = TTF_OpenFont( "PixelEmulator-xq08.ttf", MEDIUM_FONT_SIZE );
-        fontBig = TTF_OpenFont( "PixelEmulator-xq08.ttf", BIG_FONT_SIZE );
+        fontSmall = TTF_OpenFont( "PixelEmulator-xq08.ttf", SMALL_FONT_SIZE * uiScale );
+        fontMedium = TTF_OpenFont( "PixelEmulator-xq08.ttf", MEDIUM_FONT_SIZE * uiScale );
+        fontBig = TTF_OpenFont( "PixelEmulator-xq08.ttf", BIG_FONT_SIZE * uiScale );
         if ( !( fontSmall && fontMedium && fontBig ) ) 
         {
             std::cerr << "Failed to load font: " << SDL_GetError() << std::endl;
@@ -247,7 +249,7 @@ class UIRenderer
         UIElement* fpsIndicatorFrame = new UIElement( 
             UI_ANCHOR_MODE_TOP_RIGHT,
             SDL_FPoint{ 0, 0 }, 
-            SDL_FPoint{ 80, 20 }
+            SDL_FPoint{ 80 * uiScale, 20 * uiScale }
             );
         fpsIndicatorFrame->SetPivot( 1.0, 0.0 );
         uiRoot->AddChild( fpsIndicatorFrame );
@@ -255,7 +257,7 @@ class UIRenderer
         fpsIndicator = new UILabel( 
             UI_ANCHOR_MODE_CENTER,
             SDL_FPoint{ 0, 0 }, 
-            SDL_FPoint{ 60, 20 },
+            SDL_FPoint{ 60 * uiScale, 20 * uiScale },
             SDL_Color{ 100, 100, 20, 255 },
             fontSmall
             );
@@ -272,8 +274,8 @@ class UIRenderer
         
         UIButton* button = new UIButton(
             UI_ANCHOR_MODE_TOP,
-            SDL_FPoint { 0, (float) ( element + 0.5 ) * ( SELECT_BUTTON_HEIGHT + SELECT_BUTTON_SPACING ) },
-            SDL_FPoint { SELECT_BUTTON_WIDTH, SELECT_BUTTON_HEIGHT },
+            SDL_FPoint { 0, (float) ( element + 0.5 ) * ( SELECT_BUTTON_HEIGHT + SELECT_BUTTON_SPACING ) * uiScale },
+            SDL_FPoint { SELECT_BUTTON_WIDTH * uiScale, SELECT_BUTTON_HEIGHT * uiScale },
             renderingData->color
         );
         if ( !selectElement )

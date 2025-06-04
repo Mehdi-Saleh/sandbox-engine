@@ -111,11 +111,12 @@ class ElementsData
         AddChem( "Wood Lit_Wood =0.005 Lit_Wood Lit_Wood");
         AddChem( "Lit_Wood Water =0.2 Wood Steam");
         AddChem( "Lit_Wood =0.001 Wood");
-
         AddChem( "Fire Oil =0.1 Lit_Oil");
         AddChem( "Oil Lit_Oil =0.05 Lit_Oil Lit_Oil");
         AddChem( "Lit_Oil Water =0.2 Oil Steam");
         AddChem( "Lit_Oil =0.001 Oil");
+        AddChem( "Wood Lit_Oil =0.05 Lit_Wood Lit_Oil");
+        AddChem( "Oil Lit_Wood =0.05 Lit_Oil Lit_Wood");
     }
 
 

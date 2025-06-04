@@ -22,20 +22,21 @@ class Renderer
     private: std::string windowName = "Window";
     private: int windowWidth = 10;
     private: int windowHeight = 10;
-
     private: float particleSize = 8;
+    private: float uiScale = 1.0;
 
     private: int** board = nullptr;
     private: ElementsData* elementsData = nullptr;
 
 
-    public: Renderer( std::string windowName, int width, int height, float partileSize, int** board, ElementsData* elementsData )
+    public: Renderer( std::string windowName, int width, int height, float partileSize, float uiScale, int** board, ElementsData* elementsData )
     {
         this->windowName = windowName;
         this->elementsData = elementsData;
         windowWidth = width;
         windowHeight = height;
         this->particleSize = partileSize;
+        this->uiScale = uiScale;
         this->board = board;
     }
 
@@ -92,7 +93,7 @@ class Renderer
 
     private: void InitUI()
     {
-        uiRenderer = new UIRenderer( windowWidth, windowHeight, particleSize, elementsData );
+        uiRenderer = new UIRenderer( windowWidth, windowHeight, particleSize, uiScale, elementsData );
         uiRenderer->Init();
     }
 

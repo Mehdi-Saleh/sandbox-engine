@@ -15,7 +15,8 @@
 #define WINDOW_NAME "Sandbox Engine"
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEGHT 720
-#define PARTICLE_SIZE 5.0
+#define PARTICLE_SIZE 4.0
+#define UI_SCALE 1.0
 
 
 class Sandbox
@@ -23,7 +24,7 @@ class Sandbox
     FPSManager fpsManager = FPSManager();
     ElementsData elementsData = ElementsData();
     ParticlesManager particlesManager = ParticlesManager( WINDOW_WIDTH/PARTICLE_SIZE, WINDOW_HEGHT/PARTICLE_SIZE, &elementsData );
-    Renderer renderer = Renderer( std::string( WINDOW_NAME ), WINDOW_WIDTH, WINDOW_HEGHT, PARTICLE_SIZE, particlesManager.GetBoard(), &elementsData );
+    Renderer renderer = Renderer( std::string( WINDOW_NAME ), WINDOW_WIDTH, WINDOW_HEGHT, PARTICLE_SIZE, UI_SCALE, particlesManager.GetBoard(), &elementsData );
     InputHandler inputHandler = InputHandler();
     DrawingUtility drawingUtility = DrawingUtility( &particlesManager );
 
