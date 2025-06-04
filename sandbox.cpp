@@ -10,21 +10,28 @@
 #include "drawing_utility.cpp"
 #include "elements_data.cpp"
 #include "fps_manager.cpp"
+#include "settings_manager.cpp"
 
 
 #define WINDOW_NAME "Sandbox Engine"
-#define WINDOW_WIDTH 1280
-#define WINDOW_HEGHT 720
-#define PARTICLE_SIZE 4.0
-#define UI_SCALE 1.0
+// #define WINDOW_WIDTH 1280
+// #define WINDOW_HEGHT 720
+// #define PARTICLE_SIZE 4.0
+// #define UI_SCALE 1.0
 
 
 class Sandbox
 {
+    private: int windowWidth = 1280;
+    private: int windowHeight = 720;
+    private: float particleSize = 4.0;
+    private: float uiScale = 1.0;
+
+    SettingsManager settingsManager = SettingsManager();
     FPSManager fpsManager = FPSManager();
     ElementsData elementsData = ElementsData();
-    ParticlesManager particlesManager = ParticlesManager( WINDOW_WIDTH/PARTICLE_SIZE, WINDOW_HEGHT/PARTICLE_SIZE, &elementsData );
-    Renderer renderer = Renderer( std::string( WINDOW_NAME ), WINDOW_WIDTH, WINDOW_HEGHT, PARTICLE_SIZE, UI_SCALE, particlesManager.GetBoard(), &elementsData );
+    ParticlesManager particlesManager = ParticlesManager();
+    Renderer renderer = Renderer();
     InputHandler inputHandler = InputHandler();
     DrawingUtility drawingUtility = DrawingUtility( &particlesManager );
 
@@ -54,9 +61,13 @@ class Sandbox
 
     private: void Init()
     {
+        settingsManager.TryLoadSettings();
+
+        fpsManager.Init( settingsManager.simulationFps, settingsManager.renderFps );
+        particlesManager.Init( settingsManager.windowWidth/settingsManager.particleSize, settingsManager.windowHeight/settingsManager.particleSize, &elementsData );
         elementsData.LoadDefaultElements();
         elementsData.LoadDefaultChems();
-        int init_exit_code = renderer.Init();
+        int init_exit_code = renderer.Init( std::string( WINDOW_NAME ), settingsManager.windowWidth, settingsManager.windowHeight, settingsManager.particleSize, settingsManager.uiScale, particlesManager.GetBoard(), &elementsData );
         renderer.CreateSelectElementButtons( [this](int id){ drawingUtility.SelectElement( id ); } );
         if ( init_exit_code != 0 )
         {
@@ -64,7 +75,7 @@ class Sandbox
         }
 
         drawingUtility.onElementSelected = [ this ] ( int element ) { renderer.UpdateSelectedElement( element ); };
-        drawingUtility.SelectElement( 1 );
+        drawingUtility.SelectElement( 0 );
     }
 
 

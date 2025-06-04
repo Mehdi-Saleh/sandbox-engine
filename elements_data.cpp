@@ -2,8 +2,8 @@
 #define ELEMENTS_DATA
 
 #include <iostream>
+#include <sstream>
 #include <string>
-#include <bits/stdc++.h>
 #include <vector>
 #include <set>
 #include <algorithm>

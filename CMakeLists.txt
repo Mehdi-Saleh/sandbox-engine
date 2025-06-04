@@ -26,6 +26,7 @@ add_executable(
 		ui_label.cpp
 		ui_floating_bar.cpp
 		fps_manager.cpp
+		settings_manager.cpp
 		)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3 SDL3_ttf::SDL3_ttf)

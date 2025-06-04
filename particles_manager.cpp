@@ -22,7 +22,12 @@ class ParticlesManager
     private: bool isUpdateCountEven = false;
 
 
-    public: ParticlesManager( int boardWidth, int boardHeight, ElementsData* elementsData )
+    public: ParticlesManager()
+    {
+    }
+
+
+    public: void Init( int boardWidth, int boardHeight, ElementsData* elementsData )
     {
         this->boardWidth = boardWidth;
         this->boardHeight = boardHeight;

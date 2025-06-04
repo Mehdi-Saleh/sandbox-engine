@@ -3,8 +3,8 @@
 
 #include <SDL3/SDL.h>
 
-#define TARGET_SIMULATION_FPS 60
-#define TARGET_RENDER_FPS 60
+// #define TARGET_SIMULATION_FPS 60
+// #define TARGET_RENDER_FPS 60
 #define OLD_FPS_STRENGTH_IN_TOTAL_FPS 5
 
 class FPSManager
@@ -12,13 +12,30 @@ class FPSManager
     public: bool shouldUpdateSimulation = true;
     public: bool shouldRender = true;
     public: bool isPaused = false;
+
+    private: float targetSimulationFPS = 60;
+    private: float targetRenderFPS = 60;
     
-    private: float targetUpdateDelay = FPSToDelayInMilliseconds( TARGET_SIMULATION_FPS );
-    private: float targetRenderDelay = FPSToDelayInMilliseconds( TARGET_RENDER_FPS );
+    private: float targetUpdateDelay;
+    private: float targetRenderDelay;
     private: Uint64 lastUpdateTimeInMilliseconds = 0;
     private: Uint64 lastRenderTimeInMilliseconds = 0;
-    private: float averageUpdateDelay = FPSToDelayInMilliseconds( TARGET_SIMULATION_FPS );
-    private: float averageRenderDelay = FPSToDelayInMilliseconds( TARGET_RENDER_FPS );
+    private: float averageUpdateDelay;
+    private: float averageRenderDelay;
+
+
+    public: void Init( float targetSimulationFPS, float targetRenderFPS )
+    {
+        this->targetSimulationFPS = targetSimulationFPS;
+        this->targetRenderFPS = targetRenderFPS;
+
+        lastUpdateTimeInMilliseconds = 0;
+        lastRenderTimeInMilliseconds = 0;
+        targetUpdateDelay = FPSToDelayInMilliseconds( targetSimulationFPS );
+        targetRenderDelay = FPSToDelayInMilliseconds( targetRenderFPS );
+        averageUpdateDelay = FPSToDelayInMilliseconds( targetSimulationFPS );
+        averageRenderDelay = FPSToDelayInMilliseconds( targetRenderFPS );
+    }
 
 
     public: void Update()

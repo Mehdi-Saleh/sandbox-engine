@@ -31,15 +31,8 @@ class Renderer
     public: bool isUIDisabled = false;
 
 
-    public: Renderer( std::string windowName, int width, int height, float partileSize, float uiScale, int** board, ElementsData* elementsData )
+    public: Renderer()
     {
-        this->windowName = windowName;
-        this->elementsData = elementsData;
-        windowWidth = width;
-        windowHeight = height;
-        this->particleSize = partileSize;
-        this->uiScale = uiScale;
-        this->board = board;
     }
 
 
@@ -53,8 +46,16 @@ class Renderer
     }
 
 
-    public: int Init()
+    public: int Init( std::string windowName, int width, int height, float partileSize, float uiScale, int** board, ElementsData* elementsData )
     {
+        this->windowName = windowName;
+        this->elementsData = elementsData;
+        windowWidth = width;
+        windowHeight = height;
+        this->particleSize = partileSize;
+        this->uiScale = uiScale;
+        this->board = board;
+        
         int exitCode = 0;
         exitCode = InitSDL();
         InitBoard();
