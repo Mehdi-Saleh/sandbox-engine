@@ -28,6 +28,8 @@ class Renderer
     private: int** board = nullptr;
     private: ElementsData* elementsData = nullptr;
 
+    public: bool isUIDisabled = false;
+
 
     public: Renderer( std::string windowName, int width, int height, float partileSize, float uiScale, int** board, ElementsData* elementsData )
     {
@@ -104,7 +106,8 @@ class Renderer
         SDL_RenderClear( sdlRenderer );
 
         boardRenderer->Render( sdlRenderer );
-        uiRenderer->Render( sdlRenderer );
+        if ( !isUIDisabled )
+            uiRenderer->Render( sdlRenderer );
 
         SDL_RenderPresent( sdlRenderer ); // Render the screen
     }
@@ -161,6 +164,12 @@ class Renderer
     public: void UpdateSelectedElement( int element )
     {
         uiRenderer->UpdateSelectedElement( element );
+    }
+
+
+    public: void ToggleUI()
+    {
+        isUIDisabled = !isUIDisabled;
     }
 };
 

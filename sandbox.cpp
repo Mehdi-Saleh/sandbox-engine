@@ -85,6 +85,8 @@ class Sandbox
 
         if ( inputHandler.GetIsQuiting() )
             running = false;
+        else if ( inputHandler.GetIsTogglingUI() )
+            renderer.ToggleUI();
         else if ( inputHandler.GetIsLeftClicking() && !isMouseOnUI && !wasClickingBeforeSelection )
         {
             drawingUtility.AddParticles( mouseBoardPos.x, mouseBoardPos.y );

@@ -9,6 +9,8 @@
 class InputHandler
 {
     private: bool isQuiting = false;
+    private: bool isHoldingShift = false;
+    private: bool isTogglingUI = false;
     private: bool isLeftClicking = false;
     private: bool isRightClicking = false;
     private: bool isIncreasingBrushSize = false;
@@ -21,6 +23,7 @@ class InputHandler
     {
         SDL_GetMouseState( &mousePos.x, &mousePos.y );
 
+        isTogglingUI = false;
         isIncreasingBrushSize = false;
         isDecreasingBrushSize = false;
         isSelectingElement = -1;
@@ -53,8 +56,11 @@ class InputHandler
                 else if ( event.wheel.y > 0 )
                     isIncreasingBrushSize = true;
             }
-            else if (event.type == SDL_EVENT_KEY_DOWN) 
+            else if ( event.type == SDL_EVENT_KEY_DOWN ) 
             {
+                if ( event.key.scancode == SDL_SCANCODE_LSHIFT )
+                    isHoldingShift = true;
+                isTogglingUI |= event.key.scancode == SDL_SCANCODE_ESCAPE;
                 isIncreasingBrushSize |= event.key.scancode == SDL_SCANCODE_W;
                 isDecreasingBrushSize |= event.key.scancode == SDL_SCANCODE_S;
 
@@ -78,7 +84,14 @@ class InputHandler
                     isSelectingElement = 9;
                 else if ( event.key.key == SDLK_0 )
                     isSelectingElement = 0;
+                if ( isHoldingShift && isSelectingElement != -1 )
+                    isSelectingElement += 10;
             }
+            else if ( event.type == SDL_EVENT_KEY_UP )
+            {
+                if ( event.key.scancode == SDL_SCANCODE_LSHIFT )
+                    isHoldingShift = false;
+            } 
         }
     }
 
@@ -86,6 +99,12 @@ class InputHandler
     public: bool GetIsQuiting()
     {
         return isQuiting;
+    }
+
+
+    public: bool GetIsTogglingUI()
+    {
+        return isTogglingUI;
     }
 
 
