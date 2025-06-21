@@ -2,6 +2,7 @@
 #define ELEMENTS_DATA
 
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -14,6 +15,8 @@
 #define PARTICLE_STATE_POWDER 1
 #define PARTICLE_STATE_LIQUID 2
 #define PARTICLE_STATE_GAS 3
+
+#define ELEMENTS_FILE_PATH "./elements.txt"
 
 
 struct ElementParticleData
@@ -74,6 +77,70 @@ class ElementsData
     }
 
 
+    public: bool TryLoadElementsAndChems()
+    {
+        ClearElements();
+        ClearChems();
+        bool successful = true;
+        try
+        {   
+            std::ifstream file( ELEMENTS_FILE_PATH );
+            if ( !file.is_open() ) 
+            {
+                std::cerr << "Error opening the elements file!" << std::endl;
+                successful = false;
+            }
+
+            const int MODE_ELEMENT = 0;
+            const int MODE_CHEM = 1;
+            int mode = MODE_ELEMENT;
+            std::string line;
+            while ( getline( file, line ) )
+            {
+                std::cout << "\"" << line << "\"" << std::endl;
+                if ( line.empty() )
+                    continue;
+                if ( line.compare( "#Elements" ) == 0 )
+                {
+                    mode = MODE_ELEMENT;
+                    continue;
+                }
+                else if ( line.compare( "#Chems" ) == 0 )
+                {
+                    mode = MODE_CHEM;
+                    continue;
+                }
+                
+                if ( mode == MODE_ELEMENT )
+                    if ( !AddElement( line ) )
+                        successful = false;
+                if ( mode == MODE_CHEM )
+                    if ( !AddChem( line ) )
+                        successful = false;
+            }
+
+            file.close();
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << "Could not load elements/chems from file correctly: " << e.what() << std::endl;
+            successful = false;
+        }
+
+        if ( !successful )
+        {
+            ClearElements();
+            ClearChems();
+            LoadDefaultElements();
+            LoadDefaultChems();
+        }
+
+        std::cout << GetChemsCount() << std::endl;
+        
+        return successful;
+    }
+
+
     public: void LoadDefaultElements()
     {
         AddElement( "Ground Solid 5.0 #1e1e1e" );
@@ -95,7 +162,6 @@ class ElementsData
 
     public: void LoadDefaultChems()
     {
-        // Add default chems
         AddChem( "Lava Water =1.0 Stone Steam");
         AddChem( "Lava Snow =0.1 Water");
         AddChem( "Lava Stone =0.01 Lava Lava");

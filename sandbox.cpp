@@ -65,8 +65,9 @@ class Sandbox
 
         fpsManager.Init( settingsManager.simulationFps, settingsManager.renderFps );
         particlesManager.Init( settingsManager.windowWidth/settingsManager.particleSize, settingsManager.windowHeight/settingsManager.particleSize, &elementsData );
-        elementsData.LoadDefaultElements();
-        elementsData.LoadDefaultChems();
+        elementsData.TryLoadElementsAndChems();
+        // elementsData.LoadDefaultElements();
+        // elementsData.LoadDefaultChems();
         int init_exit_code = renderer.Init( std::string( WINDOW_NAME ), settingsManager.windowWidth, settingsManager.windowHeight, settingsManager.particleSize, settingsManager.uiScale, particlesManager.GetBoard(), &elementsData );
         renderer.CreateSelectElementButtons( [this](int id){ drawingUtility.SelectElement( id ); } );
         if ( init_exit_code != 0 )
