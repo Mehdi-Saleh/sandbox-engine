@@ -348,7 +348,7 @@ class ParticleMover
         // TODO find out why gasses can't mix
         if ( !( GetIsInBoardBounds( aX, aY ) && GetIsInBoardBounds( bX, bY ) ) )
             return false;
-
+        
         if ( GetIsTheSameElement( aX, aY, bX, bY ) )
             return false;
         if ( GetIsEmpty( bX, bY ) )
@@ -356,10 +356,11 @@ class ParticleMover
         else{
                 int aState = GetParticleState( aX, aY );
                 int bState = GetParticleState( bX, bY );
-                bool canPassThough = GetCanStateAPassThrougStateB(aState, bState);
+                bool canPassThrough = GetCanStateAPassThrougStateB(aState, bState);
                 bool isDensityPassable = GetIsADenserThanB(aX, aY, bX, bY);
-                if ( reverseDensity ) isDensityPassable = !isDensityPassable;
-                return canPassThough && isDensityPassable;
+                if ( reverseDensity ) 
+                    isDensityPassable = !isDensityPassable;
+                return canPassThrough && isDensityPassable;
             }
     }
 
@@ -438,7 +439,7 @@ class ParticleMover
     }
 
 
-    private: inline int GetParticleDensity( int x, int y )
+    private: inline float GetParticleDensity( int x, int y )
     {
         return elementsData->GetParticleData( board[x][y] )->density;
     }

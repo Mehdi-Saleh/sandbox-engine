@@ -97,7 +97,6 @@ class ElementsData
             std::string line;
             while ( getline( file, line ) )
             {
-                std::cout << "\"" << line << "\"" << std::endl;
                 if ( line.empty() )
                     continue;
                 if ( line.compare( "#Elements" ) == 0 )
@@ -134,8 +133,6 @@ class ElementsData
             LoadDefaultElements();
             LoadDefaultChems();
         }
-
-        std::cout << GetChemsCount() << std::endl;
         
         return successful;
     }
