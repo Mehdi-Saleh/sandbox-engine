@@ -13,3 +13,7 @@ Just download and extract the zip file from Realeases. Then run the sandbox-engi
 - You can also select elements by clicking on the E icon
 - Space - Pause/unpause simulation
 - Esc - Hide/show UI
+
+# Options
+- See the settings.txt file for general settings
+- You can edit/change elements and chemical reactions from elements.txt
