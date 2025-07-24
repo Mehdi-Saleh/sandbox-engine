@@ -1,3 +1,5 @@
+![ScreenShot](./screenshots/screenshot1.png)
+
 This a sandbox simulation toy. You can place different materials on the board and watch them react to each other.
 
 # How to use
